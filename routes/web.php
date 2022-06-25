@@ -246,7 +246,10 @@ Route::group(['middleware' => ['auth', 'active']], function() {
 	Route::resource('accounts', 'AccountsController');
 	Route::resource('money-transfers', 'MoneyTransferController');
 	// New Routes
-	//Route::get('accounts/customer_statement', 'AccountsController@customer_statement')->name('accounts.customer_statement');
+	Route::get('accounts/customer_statement', 'AccountsController@customer_statement')->name('accounts.customer_statement');
+	Route::get('accounts/supplier_statement', 'AccountsController@supplier_statement')->name('accounts.supplier_statement');
+	Route::get('accounts/expense_statement', 'AccountsController@expense_statement')->name('accounts.expense_statement');
+	Route::get('accounts/bank_statement', 'AccountsController@bank_statement')->name('accounts.bank_statement');
 	
 	Route::get('purchase-voucher', 'VoucherController@purchase');
 	
@@ -348,5 +351,7 @@ Route::post('accounts/{id}/supplier_ledger_update', 'AccountsController@supplier
 
 	Route::get('/home', 'HomeController@index')->name('home');
 	Route::get('my-transactions/{year}/{month}', 'HomeController@myTransaction');
+
+	Route::post('accounts/supplierAccountStatement', 'AccountsController@supplierAccountStatement')->name('accounts.supplier-statement');
 });
 
