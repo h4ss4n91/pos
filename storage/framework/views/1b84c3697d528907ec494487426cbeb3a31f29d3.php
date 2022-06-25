@@ -1,8 +1,8 @@
-@extends('layout.main') @section('content')
+ <?php $__env->startSection('content'); ?>
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <style>
-@import url(https://fonts.googleapis.com/earlyaccess/notonaskharabic.css);
+@import  url(https://fonts.googleapis.com/earlyaccess/notonaskharabic.css);
 
 #customerUrduName{
   font-family: 'Noto Naskh Arabic', serif;
@@ -26,7 +26,7 @@
     <div class="container-fluid">
         <div class="card">
             <div style="background:purple; padding:10px;" class="card-header mt-2">
-                <h1 style="color:#fff;" class="text-center">Customer {{trans('file.Account Statement')}}</h1>
+                <h1 style="color:#fff;" class="text-center">Customer <?php echo e(trans('file.Account Statement')); ?></h1>
             </div>
             <div class="card-body">
                
@@ -44,23 +44,24 @@
                                                 <table style="width:80%">
                                                     <tr>
                                                         <td>
-                                                            {!! Form::open(['route' => 'accounts.statement', 'method' => 'post']) !!}
+                                                            <?php echo Form::open(['route' => 'accounts.statement', 'method' => 'post']); ?>
+
                                                             <div class="row">
                                                                 <div class="col-md-12 form-group">
                                                                     <select class="form-control selectpicker" id="account_id" name="account_id" data-live-search="true" data-live-search-style="begins" title="Select customer...">
-                                                                        @php $customers = DB::table('customers')->where('is_active', true)->get(); @endphp
-                                                                        @foreach($customers as $account)
-                                                                            <option style="font-weight:bold; font-size:21px;" value="{{$account->id}}">{{$account->name}} <span style="color:red !mportant">({{$account->city}})</span> ({{$account->id}})</option>
-                                                                        @endforeach
+                                                                        <?php $customers = DB::table('customers')->where('is_active', true)->get(); ?>
+                                                                        <?php $__currentLoopData = $customers; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $account): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                                            <option style="font-weight:bold; font-size:21px;" value="<?php echo e($account->id); ?>"><?php echo e($account->name); ?> <span style="color:red !mportant">(<?php echo e($account->city); ?>)</span> (<?php echo e($account->id); ?>)</option>
+                                                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                                                     </select>
                                                                 </div>
                                                               </div>
                                                         </td>
                                                         <td>
                                                             <div class="form-group">
-                                                                  <button type="submit" class="btn btn-primary">{{trans('file.submit')}}</button>
+                                                                  <button type="submit" class="btn btn-primary"><?php echo e(trans('file.submit')); ?></button>
                                                               </div>
-                                                        {{ Form::close() }}      
+                                                        <?php echo e(Form::close()); ?>      
                                                         </td>
                                                     </tr>
                                                 </table>
@@ -173,7 +174,7 @@
 
 <!-- Script -->
      <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> --> <!-- jQuery CDN -->
-     <script src="{{asset('js/jquery-3.3.1.min.js')}}"></script>
+     <script src="<?php echo e(asset('js/jquery-3.3.1.min.js')); ?>"></script>
 
      <script type='text/javascript'>
      
@@ -184,7 +185,7 @@ $('select[name="account_id"]').on('change', function() {
                 header:{
                 'X-CSRF-TOKEN':$('meta[name="csrf-token"]').attr('content')
                 },
-                url:"{{env('APP_URL')}}/sales/"+id+"/customer_balance",
+                url:"<?php echo e(env('APP_URL')); ?>/sales/"+id+"/customer_balance",
             })
             .done(function(data) {
                 //var balance = jQuery.parseJSON(data);
@@ -944,12 +945,12 @@ $('select[name="account_id"]').on('change', function() {
     $('#account-table').DataTable( {
         "order": [],
         'language': {
-            'lengthMenu': '_MENU_ {{trans("file.records per page")}}',
-             "info":      '{{trans("file.Showing")}} _START_ - _END_ (_TOTAL_)',
-            "search":  '{{trans("file.Search")}}',
+            'lengthMenu': '_MENU_ <?php echo e(trans("file.records per page")); ?>',
+             "info":      '<?php echo e(trans("file.Showing")); ?> _START_ - _END_ (_TOTAL_)',
+            "search":  '<?php echo e(trans("file.Search")); ?>',
             'paginate': {
-                    'previous': '{{trans("file.Previous")}}',
-                    'next': '{{trans("file.Next")}}'
+                    'previous': '<?php echo e(trans("file.Previous")); ?>',
+                    'next': '<?php echo e(trans("file.Next")); ?>'
             }
         },
         'columnDefs': [
@@ -970,7 +971,7 @@ $('select[name="account_id"]').on('change', function() {
         buttons: [
             {
                 extend: 'pdf',
-                text: '{{trans("file.PDF")}}',
+                text: '<?php echo e(trans("file.PDF")); ?>',
                 exportOptions: {
                     columns: ':visible:Not(.not-exported)',
                     rows: ':visible'
@@ -978,7 +979,7 @@ $('select[name="account_id"]').on('change', function() {
             },
             {
                 extend: 'csv',
-                text: '{{trans("file.CSV")}}',
+                text: '<?php echo e(trans("file.CSV")); ?>',
                 exportOptions: {
                     columns: ':visible:Not(.not-exported)',
                     rows: ':visible'
@@ -986,7 +987,7 @@ $('select[name="account_id"]').on('change', function() {
             },
             {
                 extend: 'print',
-                text: '{{trans("file.Print")}}',
+                text: '<?php echo e(trans("file.Print")); ?>',
                 exportOptions: {
                     columns: ':visible:Not(.not-exported)',
                     rows: ':visible'
@@ -994,7 +995,7 @@ $('select[name="account_id"]').on('change', function() {
             },
             {
                 extend: 'colvis',
-                text: '{{trans("file.Column visibility")}}',
+                text: '<?php echo e(trans("file.Column visibility")); ?>',
                 columns: ':gt(0)'
             },
         ],
@@ -1027,4 +1028,5 @@ $(function () {
 
 </script>
 
-@endsection
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layout.main', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
