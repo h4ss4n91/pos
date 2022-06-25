@@ -582,4 +582,11 @@ class ProductController extends Controller
         $lims_product_data->save();
         return redirect('products')->with('message', 'Product deleted successfully');
     }
+
+    public function product_api(){
+        
+            $products = Product::inRandomOrder()->get();
+            return $products;
+        
+    }
 }

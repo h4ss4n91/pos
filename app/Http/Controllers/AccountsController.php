@@ -39,11 +39,12 @@ class AccountsController extends Controller
     {
         //
         if($id == "customer_statement"){
-            $role = Role::find(Auth::user()->role_id);
-            if($role->hasPermissionTo('account-index')){
-                $lims_account_all = Account::where('is_active', true)->get();
-                return view('account.customer_statement', compact('lims_account_all'));
-            }
+                $role = Role::find(Auth::user()->role_id);
+                if($role->hasPermissionTo('account-index')){
+                    $lims_account_all = Account::where('is_active', true)->get();
+                    
+                    return view('account.customer_statement', compact('lims_account_all'));
+                }
             
         }elseif($id == "supplier_statement"){
                 $role = Role::find(Auth::user()->role_id);
@@ -52,13 +53,13 @@ class AccountsController extends Controller
                     return view('account.supplier_statement', compact('lims_account_all'));
                 }
         }elseif($id == "expense_statement"){
-               $role = Role::find(Auth::user()->role_id);
+                $role = Role::find(Auth::user()->role_id);
                 if($role->hasPermissionTo('account-index')){
                     $lims_account_all = Account::where('is_active', true)->get();
                     return view('account.expense_statement', compact('lims_account_all'));
                 }
         }elseif($id == "bank_statement"){
-            $role = Role::find(Auth::user()->role_id);
+                $role = Role::find(Auth::user()->role_id);
                 if($role->hasPermissionTo('account-index')){
                     $lims_account_all = Account::where('is_active', true)->get();
                     return view('account.bank_statement', compact('lims_account_all'));
