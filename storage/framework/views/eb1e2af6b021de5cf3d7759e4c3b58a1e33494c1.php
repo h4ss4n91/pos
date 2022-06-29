@@ -826,6 +826,8 @@
                           ['role_id', $role->id]
                       ])->first();
                   ?>
+                  <li id="hrm-setting-menu"><a href="<?php echo e(url('city')); ?>"> City</a></li>
+                  <li id="hrm-setting-menu"><a href="<?php echo e(url('years')); ?>"> Years</a></li>
                   <?php if($role->id <= 2): ?>
                   <li id="role-menu"><a href="<?php echo e(route('role.index')); ?>"><?php echo e(trans('file.Role Permission')); ?></a></li>
                   <?php endif; ?>
@@ -863,6 +865,7 @@
                   <?php if($hrm_setting_permission_active): ?>
                   <li id="hrm-setting-menu"><a href="<?php echo e(route('setting.hrm')); ?>"> <?php echo e(trans('file.HRM Setting')); ?></a></li>
                   <?php endif; ?>
+                  
                 </ul>
               </li>
             </ul>
@@ -1076,6 +1079,16 @@
                 <div class="modal-body">
                   <p class="italic"><small><?php echo e(trans('file.The field labels marked with * are required input fields')); ?>.</small></p>
                     <?php echo Form::open(['route' => 'accounts.store', 'method' => 'post']); ?>
+
+                    <div class="form-group">
+                          <label>Select Account Type *</label>
+                          <select class="form-control" name="account_type">
+                            <option value="customer"> Customer </option>
+                            <option value="supplier"> Supplier </option>
+                            <option value="bank"> Bank </option>
+                            <option value="expense"> Expense </option>
+                          </select>
+                      </div>
 
                       <div class="form-group">
                           <label><?php echo e(trans('file.Account No')); ?> *</label>

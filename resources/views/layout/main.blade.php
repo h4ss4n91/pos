@@ -814,6 +814,8 @@
                           ['role_id', $role->id]
                       ])->first();
                   ?>
+                  <li id="hrm-setting-menu"><a href="{{url('city')}}"> City</a></li>
+                  <li id="hrm-setting-menu"><a href="{{url('years')}}"> Years</a></li>
                   @if($role->id <= 2)
                   <li id="role-menu"><a href="{{route('role.index')}}">{{trans('file.Role Permission')}}</a></li>
                   @endif
@@ -851,6 +853,7 @@
                   @if($hrm_setting_permission_active)
                   <li id="hrm-setting-menu"><a href="{{route('setting.hrm')}}"> {{trans('file.HRM Setting')}}</a></li>
                   @endif
+                  
                 </ul>
               </li>
             </ul>
@@ -1061,6 +1064,16 @@
                 <div class="modal-body">
                   <p class="italic"><small>{{trans('file.The field labels marked with * are required input fields')}}.</small></p>
                     {!! Form::open(['route' => 'accounts.store', 'method' => 'post']) !!}
+                    <div class="form-group">
+                          <label>Select Account Type *</label>
+                          <select class="form-control" name="account_type">
+                            <option value="customer"> Customer </option>
+                            <option value="supplier"> Supplier </option>
+                            <option value="bank"> Bank </option>
+                            <option value="expense"> Expense </option>
+                          </select>
+                      </div>
+
                       <div class="form-group">
                           <label>{{trans('file.Account No')}} *</label>
                           <input type="text" name="account_no" required class="form-control">

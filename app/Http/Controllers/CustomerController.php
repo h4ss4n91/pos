@@ -9,6 +9,7 @@ use App\Deposit;
 use App\User;
 use Illuminate\Validation\Rule;
 use Auth;
+use DB;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use App\Mail\UserNotification;
@@ -67,7 +68,22 @@ class CustomerController extends Controller
                 $message = 'Customer created successfully. Please setup your <a href="setting/mail_setting">mail setting</a> to send mail.';
             }   
         }
-        Customer::create($lims_customer_data);
+        $customer_id = Customer::create($lims_customer_data);
+
+        
+        DB::table('accounts')->insertGetId(array(
+            'account_type' => 'customer',
+            'accountTypeID' => $customer_id['id'],
+            'account_no' => $customer_id['id'],
+            'initial_balance' => 0,
+            'total_balance' => 0,
+            'name' => $lims_customer_data['name'],
+            'is_default' => 1,
+            'is_active' => 1,
+            'created_at' => date('Y-m-d H:s:i'),
+            'updated_at' =>  date('Y-m-d H:s:i')
+        ));
+        
         if($lims_customer_data['pos'])
             return redirect('pos')->with('message', $message);
         else

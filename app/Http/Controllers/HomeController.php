@@ -181,4 +181,67 @@ class HomeController extends Controller
         $next_month = date('m', strtotime('+1 month', strtotime($year.'-'.$month.'-01')));
         return view('user.my_transaction', compact('start_day', 'year', 'month', 'number_of_day', 'prev_year', 'prev_month', 'next_year', 'next_month', 'sale_generated', 'sale_grand_total','purchase_generated', 'purchase_grand_total','quotation_generated', 'quotation_grand_total'));
     }
+
+
+    public function city()
+    {
+        $city = DB::table('cities')->get();
+        return view('city', compact('city'));
+    }
+    
+    public function years()
+    {
+        $years = DB::table('years')->get();
+        return view('years', compact('years'));
+    }
+    
+     public function submit_year(Request $request)
+    {
+         DB::table('years')->insert([
+                'year' => $request->years,
+                'created_at' => date('Y-m-d H:i:s')
+            ]);
+        return redirect()->back();
+    }
+    
+     public function select_year($year)
+    {
+        $affected_testing = DB::table('years')
+              ->update([
+                    'current_year' => ""
+                    ]);
+                    
+         $affected = DB::table('years')
+              ->where('year', $year)
+              ->update([
+                    'current_year' => $year
+                    ]);
+        return redirect()->back();
+    }
+    
+    public function submit_city(Request $request)
+    {
+        //dd($request);
+        //die();
+        DB::table('cities')->insert([
+                'city' => $request->city_name_english,
+                'urdu_name' => $request->city_name_urdu,
+                'created_at' => date('Y-m-d H:i:s')
+            ]);
+        return redirect()->back();
+    }
+    
+    public function update_city(Request $request)
+    {
+        
+        $affected = DB::table('cities')
+              ->where('id', $request->id)
+              ->update([
+                    'city' => $request->city_name_english,
+                    'urdu_name' => $request->city_name_urdu
+                    ]);
+              
+        
+        return redirect()->back();
+    }
 }

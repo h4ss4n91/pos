@@ -386,7 +386,7 @@ $('select[name="account_id"]').on('change', function() {
                    "<td align='center'>" + (i+1) + "</td>" +
                    "<td align='center'>" + new_date + "</td>" +
                    "<td align='center'>" + expires_in + "</td>" +
-                   "<td style='width:250px;' align='center'>" + bill_no + "<span style='color:red;>"+payment_note+"</span><span style='display:block; color:red; font-size:16px;'>"+sale_note+"</span></td>" +
+                   "<td style='width:250px;' align='center'><a href='http://localhost/cd/pos/sales/" + bill_no + "/edit'>" + bill_no + "</a><span style='color:red;>"+payment_note+"</span><span style='display:block; color:red; font-size:16px;'>"+sale_note+"</span></td>" +
                    "<td class='receipt' align='center'>" + debit + "</td>" +
                    "<td class='payment' align='center'>" + credit +  "</td>" +
                    "<td class='balance' align='center'>" + currentBalance + "</td>" +
@@ -398,7 +398,7 @@ $('select[name="account_id"]').on('change', function() {
                    "<td align='center'>" + (i+1) + "</td>" +
                    "<td align='center'>" + new_date + "</td>" +
                    "<td align='center'>" + expires_in + "</td>" +
-                   "<td style='width:250px;' align='center'>" + bill_no + "<span style='color:red;'>"+payment_note+"</span><span style='display:block; color:red; font-size:16px;'>"+sale_note+"</span></td>" +
+                   "<td style='width:250px;' align='center'><a href='http://localhost/cd/pos/sales/" + bill_no + "/edit'>" + bill_no + "</a><span style='color:red;'>"+payment_note+"</span><span style='display:block; color:red; font-size:16px;'>"+sale_note+"</span></td>" +
                    "<td class='receipt' align='center'>" + debit + "</td>" +
                    "<td class='payment' align='center'>" + credit +  "</td>" +
                    "<td class='balance' align='center'>" + currentBalance + "</td>" +

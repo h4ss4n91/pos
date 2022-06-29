@@ -260,6 +260,8 @@ class SaleController extends Controller
 
     public function create()
     {
+
+        
         $role = Role::find(Auth::user()->role_id);
         if($role->hasPermissionTo('sales-add')){
             $lims_customer_list = Customer::where('is_active', true)->get();
@@ -278,6 +280,7 @@ class SaleController extends Controller
     {
         $data = $request->all();
         //return dd($data);
+
         $data['user_id'] = Auth::id();
         if($data['pos']){
             $data['reference_no'] = 'posr-' . date("Ymd") . '-'. date("his");
@@ -298,6 +301,8 @@ class SaleController extends Controller
         }
         else
             $data['reference_no'] = 'sr-' . date("Ymd") . '-'. date("his");
+
+            
 
         $document = $request->document;
         if ($document) {
@@ -323,6 +328,27 @@ class SaleController extends Controller
         }
 
         $lims_sale_data = Sale::create($data);
+
+            $paying_method = 'Deposit';
+            $lims_payment_data = new Payment();
+            $lims_payment_data->user_id = Auth::id();
+            $lims_account_data = Account::where('is_default', true)->first();
+            $lims_payment_data->account_id = $data['customer_id'];
+            $lims_payment_data->sale_id = $lims_sale_data->id;
+            $data['payment_reference'] = 'spr-'.date("Ymd").'-'.date("his");
+            $lims_payment_data->payment_reference = $data['payment_reference'];
+            $lims_payment_data->amount = $data['grand_total'];
+            $lims_payment_data->change = $data['paying_amount'] - $data['paid_amount'];
+            $lims_payment_data->paying_method = $paying_method;
+            $lims_payment_data->payment_note = $data['payment_note'];
+            
+            $get_current_year = DB::table('years')->where('current_year','!=',"")->get();
+            $lims_payment_data->year = $get_current_year[0]->current_year;
+            
+            $lims_payment_data->type = "d";
+            $lims_payment_data->debit = $data['grand_total'];
+            $lims_payment_data->save();
+            
         $lims_customer_data = Customer::find($data['customer_id']);
         //collecting male data
         $mail_data['email'] = $lims_customer_data->email;
@@ -2125,4 +2151,46 @@ class SaleController extends Controller
         $lims_sale_data->delete();
         return Redirect::to($url)->with('not_permitted', $message);
     }
+
+
+    public function customer_balance($id){
+
+        $payment = str_replace($id, 'payment_', $id);
+        
+        $payment_id = str_replace('payment_', '', $id);
+        
+        $customer_name = DB::table('customers')
+            ->where('id', '=', $payment_id)
+            ->get();
+
+        $accounts_t_balance_debit = DB::table('payments')
+            ->where('account_id', '=', $payment_id)
+            ->where('sale_id', '!=', NULL)
+            ->where('type', '=', 'd')
+            ->sum('debit');
+            
+        $accounts_t_balance_credit = DB::table('payments')
+            ->where('account_id', '=', $payment_id)
+            ->where('sale_id', '!=', NULL)
+            ->where('type', '=', 'c')
+            ->sum('credit');
+            
+            $total = $accounts_t_balance_debit - $accounts_t_balance_credit ;
+        
+            //echo json_encode($total);
+            
+            $last_date = DB::table('payments')->orderBy('id', 'desc')->where('account_id', '=', $payment_id)->where('credit', '!=', NULL)->first();
+            
+            if(isset($last_date->date) ){
+                $first_date = new DateTime(date('d-m-Y', strtotime($last_date->date)));
+                $second_date = new DateTime(date('d-m-Y'));
+                $interval = $first_date->diff($second_date);
+                $last = $interval->format('%a');
+                return $array = array($total, $customer_name[0]->company_name, $last, $accounts_t_balance_credit, $customer_name[0]->phone_number);
+            }else{
+                $last = 0;
+            return $array = array($total, $customer_name[0]->company_name, $last, $accounts_t_balance_credit, $customer_name[0]->phone_number);    
+            }
+    }
+    
 }

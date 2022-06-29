@@ -353,5 +353,23 @@ Route::post('accounts/{id}/supplier_ledger_update', 'AccountsController@supplier
 	Route::get('my-transactions/{year}/{month}', 'HomeController@myTransaction');
 
 	Route::post('accounts/supplierAccountStatement', 'AccountsController@supplierAccountStatement')->name('accounts.supplier-statement');
+
+	Route::get('sales/{id}/customer_balance', 'SaleController@customer_balance');
+
+	Route::get('accounts/getRecords/{id}','AccountsController@getRecords');
+	Route::get('accounts/getRecords_tick/{id}/{current_balance}','AccountsController@getRecords_tick');
+	Route::get('accounts/getBillRecords/{id}','AccountsController@getBillRecords');
+	Route::get('accounts/checkRecords/{id}','AccountsController@checkRecords');
+	Route::get('accounts/getBankRecords_two/{id}','AccountsController@getBankRecords_two');
+	Route::get('accounts/getEXPRecords/{id}','AccountsController@getEXPRecords');
+
+
+	Route::get('/city', 'HomeController@city')->name('city');
+	Route::get('/years', 'HomeController@years')->name('years');
+	Route::post('/submit_year', 'HomeController@submit_year')->name('submit_year');
+	Route::get('/select_year/{year}', 'HomeController@select_year')->name('select_year');
+	Route::post('/submit_city', 'HomeController@submit_city')->name('submit_city');
+	Route::post('/update_city', 'HomeController@update_city')->name('update_city');
+
 });
 

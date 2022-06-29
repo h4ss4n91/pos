@@ -12,6 +12,7 @@ use App\Unit;
 use App\Tax;
 use App\Product_Warehouse;
 use DB;
+use App\Payment;
 use App\Returns;
 use App\Account;
 use App\ProductReturn;
@@ -201,6 +202,29 @@ class ReturnController extends Controller
         }
 
         $lims_return_data = Returns::create($data);
+
+        $paying_method = 'Credit';
+        $lims_payment_data = new Payment();
+        $lims_payment_data->user_id = Auth::id();
+        $lims_account_data = Account::where('is_default', true)->first();
+        $lims_payment_data->account_id = $data['customer_id'];
+        $lims_payment_data->sale_return_id = $lims_return_data->id;
+        $lims_payment_data->sale_id = $lims_return_data->id;
+        $data['payment_reference'] = 'spr-'.date("Ymd").'-'.date("his");
+        $lims_payment_data->payment_reference = $data['payment_reference'];
+        $lims_payment_data->amount = $data['grand_total'];
+        $lims_payment_data->change = 0;
+        $lims_payment_data->paying_method = $paying_method;
+        
+        
+        $get_current_year = DB::table('years')->where('current_year','!=',"")->get();
+        $lims_payment_data->year = $get_current_year[0]->current_year;
+        
+        $lims_payment_data->type = "c";
+        $lims_payment_data->credit = $data['grand_total'];
+        $lims_payment_data->save();
+
+
         $lims_customer_data = Customer::find($data['customer_id']);
         //collecting male data
         $mail_data['email'] = $lims_customer_data->email;
