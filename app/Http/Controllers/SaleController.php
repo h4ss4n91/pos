@@ -2192,5 +2192,74 @@ class SaleController extends Controller
             return $array = array($total, $customer_name[0]->company_name, $last, $accounts_t_balance_credit, $customer_name[0]->phone_number);    
             }
     }
+
+
+    public function supplier_balance($id){ 
+         
+        $payment = str_replace($id, 'payment_', $id);
+        
+        $payment_id = str_replace('payment_', '', $id);
+        
+        $customer_name = DB::table('suppliers')
+            ->where('id', '=', $payment_id)
+            ->get();
+
+        $accounts_t_balance_debit = DB::table('payments')
+            ->where('payments.account_id', '=', $payment_id)
+            ->where('payments.purchase_id', '!=', NULL)
+            ->where('payments.type', '=', 'd')
+            ->sum('payments.debit');
+            
+        $accounts_t_balance_credit = DB::table('payments')
+            ->where('account_id', '=', $payment_id)
+            ->where('purchase_id', '!=', NULL)
+            ->where('type', '=', 'c')
+            ->sum('credit');
+            
+            $total = $accounts_t_balance_credit - $accounts_t_balance_debit;
+            
+            
+            
+            
+            $accounts_t_balance_debit_latest = DB::table('payments')
+            ->where('payments.account_id', '=', $payment_id)
+            ->where('payments.purchase_id', '!=', NULL)
+            ->where('payments.type', '=', 'd')
+            ->sum('payments.debit');
+            
+        $accounts_t_balance_credit_latest = DB::table('payments')
+            ->where('payments.account_id', '=', $payment_id)
+            ->where('payments.purchase_id', '!=', NULL)
+            ->where('payments.type', '=', 'c')
+            ->sum('payments.credit');
+            
+            $total_latest = $accounts_t_balance_credit_latest - $accounts_t_balance_debit_latest;
+        
+            $last_date = DB::table('payments')->orderBy('id', 'desc')->where('account_id', '=', $payment_id)->where('credit', '!=', NULL)->first();
+            
+            if(isset($last_date->date) ){
+                $first_date = new DateTime(date('d-m-Y', strtotime($last_date->date)));
+                $second_date = new DateTime(date('d-m-Y'));
+                $interval = $first_date->diff($second_date);
+                $last = $interval->format('%a');
+                return $array = array($total, $customer_name[0]->name, $last, $accounts_t_balance_credit, $total_latest);
+            }else{
+                $last = 0;
+            return $array = array($total, $customer_name[0]->name, $last, $accounts_t_balance_credit, $total_latest);    
+            }
+    
+    
+        }
+
+
+        public function customer($id, $customer, $balance){
+
+            $customers = DB::table('customers')->where('id', '=', $id)->get();
+            $accounts_balance = DB::table('accounts')->where('account_no', '=', $id)->where('account_type', '=', 'customer')->get();
+                $array = array(
+                    'name' => $customers[0]->name,
+                    'city' => $customers[0]->city);
+                echo json_encode($array);
+        }
     
 }

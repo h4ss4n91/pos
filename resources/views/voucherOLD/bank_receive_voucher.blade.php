@@ -299,7 +299,7 @@
 <script src="{{asset('public/src/jquery.inputpicker.js')}}"></script>
 <script type="text/javascript">
 
-        var url = 'https://sadaftraders.com/st/api/products/get_new_products';
+        var url = 'http://localhost/cd/pos/api/products/get_new_products';
 
             $.ajax( {
                 type:'GET',
@@ -324,7 +324,7 @@
         var currentIndex = 0;
     
         function download_product(){
-        var url = 'https://sadaftraders.com/st/api/products/get_new_products';
+        var url = 'http://localhost/cd/pos/api/products/get_new_products';
         $.ajax( {
                 type:'GET',
                 header:{
@@ -343,7 +343,7 @@
                                         header:{
                                             'X-CSRF-TOKEN':$('meta[name="csrf-token"]').attr('content')
                                             },
-                                    url:"https://sadaftraders.com/st/products_upload/"+value.name+"/"+value.urdu_name+"/"+value.packing+"/"+value.lot+"/"+value.category_id,
+                                    url:"http://localhost/cd/pos/products_upload/"+value.name+"/"+value.urdu_name+"/"+value.packing+"/"+value.lot+"/"+value.category_id,
                                     success:function(response){
                                         console.log(response);
                                         //location.href = '../products';
@@ -461,7 +461,7 @@ $('select[name="customer_id"]').on('change', function() {
                 header:{
                 'X-CSRF-TOKEN':$('meta[name="csrf-token"]').attr('content')
                 },
-                url:"https://sadaftraders.com/st/sales/"+id+"/total_balance",
+                url:"http://localhost/cd/pos/sales/"+id+"/total_balance",
             })
             .done(function(data) {
                 //var balance = jQuery.parseJSON(data);
@@ -763,7 +763,7 @@ function addRow(counter){
                 header:{
                 'X-CSRF-TOKEN':$('meta[name="csrf-token"]').attr('content')
                 },
-                url:"https://sadaftraders.com/st/sales/"+id+"/bank_balance",
+                url:"http://localhost/cd/pos/sales/"+id+"/bank_balance",
             })
             .done(function(data) {
                 var product = jQuery.parseJSON(data);
@@ -851,7 +851,7 @@ $(document).ready(function(){
                 header:{
                 'X-CSRF-TOKEN':$('meta[name="csrf-token"]').attr('content')
                 },
-                url:"https://sadaftraders.com/st/sales/"+id+"/bank_balance",
+                url:"http://localhost/cd/pos/sales/"+id+"/bank_balance",
             })
             .done(function(data) {
                 var product = jQuery.parseJSON(data);
@@ -968,7 +968,7 @@ function test(id){
         header:{
         'X-CSRF-TOKEN':$('meta[name="csrf-token"]').attr('content')
         },
-        url:"https://sadaftraders.com/st/sales/"+option_id,
+        url:"http://localhost/cd/pos/sales/"+option_id,
     })
     .done(function(data) {
         var product = jQuery.parseJSON(data);

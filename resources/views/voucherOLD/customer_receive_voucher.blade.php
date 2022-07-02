@@ -400,7 +400,7 @@ $('select[name="customer_id"]').on('change', function() {
                 header:{
                 'X-CSRF-TOKEN':$('meta[name="csrf-token"]').attr('content')
                 },
-                url:"https://sadaftraders.com/st/sales/"+id+"/total_balance",
+                url:"http://localhost/cd/pos/sales/"+id+"/total_balance",
             })
             .done(function(data) {
                 //var balance = jQuery.parseJSON(data);
@@ -701,7 +701,7 @@ function addRow(counter){
                 header:{
                 'X-CSRF-TOKEN':$('meta[name="csrf-token"]').attr('content')
                 },
-                url:"https://sadaftraders.com/st/customer/"+id+"/customer/balance",
+                url:"http://localhost/cd/pos/customer/"+id+"/customer/balance",
                 
             })
             .done(function(data) {
@@ -790,7 +790,7 @@ $(document).ready(function(){
                 header:{
                 'X-CSRF-TOKEN':$('meta[name="csrf-token"]').attr('content')
                 },
-                url:"https://sadaftraders.com/st/customer/"+id+"/customer/balance",
+                url:"http://localhost/cd/pos/customer/"+id+"/customer/balance",
             })
             .done(function(data) {
                 var product = jQuery.parseJSON(data);
@@ -908,7 +908,7 @@ function test(id){
         header:{
         'X-CSRF-TOKEN':$('meta[name="csrf-token"]').attr('content')
         },
-        url:"https://sadaftraders.com/st/sales/"+option_id,
+        url:"http://localhost/cd/pos/sales/"+option_id,
     })
     .done(function(data) {
         var product = jQuery.parseJSON(data);

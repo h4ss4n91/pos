@@ -266,25 +266,127 @@ class AccountsController extends Controller
          
 }
 
-public function getRecords_tick($id, $current_balance){
+    public function getRecords_tick($id, $current_balance){
+            
+        $payments = DB::table('payments')
+            ->where('id', '=', $id)
+            ->get();
+            
+        //$payments[0]->debit + $payments[0]->credit
+            
+        DB::table('payments')
+        ->where('id', $id)
+        ->update(['status' => 1, 'checked_amount' => $current_balance]);
         
-    $payments = DB::table('payments')
-        ->where('id', '=', $id)
-        ->get();
-        
-    //$payments[0]->debit + $payments[0]->credit
-        
-    DB::table('payments')
-    ->where('id', $id)
-    ->update(['status' => 1, 'checked_amount' => $current_balance]);
-    
-    $updated['success'] = 'Updated Successfully.';
-    $updated['id'] = $payments[0]->account_id;
+        $updated['success'] = 'Updated Successfully.';
+        $updated['id'] = $payments[0]->account_id;
 
-    
-    echo json_encode($updated);
         
-    
-}
+        echo json_encode($updated);
+            
+        
+    }
+
+    public function getSupplierRecords($id){
+
+
+        $payment = str_replace($id, 'payment_', $id);
+        $payment_id = str_replace('payment_', '', $id);
+        
+        
+                $debit_list_two = DB::table('payments as pay')
+                     ->where('pay.account_id',$payment_id)
+                     ->where('purchase_id', '!=', NULL)
+                     ->orderBy('date_2','ASC')
+                     ->select("pay.*", DB::raw('DATEDIFF(NOW(), date_2) as expires_in, DATE_FORMAT(pay.date_2, "%d-%m-%Y") as formatted_date'))
+                     ->get();
+        
+        $total_receiving = DB::table('payments')
+            ->where('account_id', '=', $payment_id)
+            ->where('purchase_id', '!=', NULL)
+            ->where('type', '=', 'c')
+            ->sum('credit');
+            
+        $total_receiving = DB::table('payments')
+            ->where('account_id', '=', $payment_id)
+            ->where('purchase_id', '!=', NULL)
+            ->where('type', '=', 'c')
+            ->sum('credit');
+            
+            
+            
+        $current_balance_credit = DB::table('payments')
+            ->where('account_id', '=', $payment_id)
+            ->where('purchase_id', '!=', NULL)
+            ->where('type', '=', 'c')
+            ->sum('credit');
+            
+        $current_balance_debit = DB::table('payments')
+            ->where('account_id', '=', $payment_id)
+            ->where('purchase_id', '!=', NULL)
+            ->where('type', '=', 'd')
+            ->sum('debit');
+         
+         $userData['total_debit'] = $current_balance_debit;
+         $userData['total_credit'] = $current_balance_credit;
+         
+         // Fetch all records
+         $userData['data'] = $debit_list_two;
+         $userData['total_receiving'] = $total_receiving;
+         
+         echo json_encode($userData);
+
+
+          
+        //  $payment = str_replace($id, 'payment_', $id);
+        //  $payment_id = str_replace('payment_', '', $id);
+         
+        //      $debit_list_two_previous = DB::table('payments as pay')
+        //               ->where('pay.account_id',$payment_id)
+        //               ->where('purchase_id', '!=', NULL)
+        //               ->orderBy('date_2','ASC')
+        //               ->select("pay.*", DB::raw('DATE_FORMAT(pay.date_2, "%d-%m-%Y") as formatted_date'))
+        //               ->get();
+         
+        //  $total_receiving_previous = DB::table('payments')
+        //      ->where('account_id', '=', $payment_id)
+        //      ->where('purchase_id', '!=', NULL)
+        //      ->where('type', '=', 'c')
+        //      ->sum('credit');
+             
+             
+        //  $debit_list_two = DB::table('payments as pay')
+        //               ->where('pay.account_id',$payment_id)
+        //               ->where('purchase_id', '!=', NULL)
+        //               ->orderBy('date_2','ASC')
+        //               ->select("pay.*", DB::raw('DATE_FORMAT(pay.date_2, "%d-%m-%Y") as formatted_date'))
+        //               ->get();
+         
+        //  $total_receiving = DB::table('payments')
+        //      ->where('account_id', '=', $payment_id)
+        //      ->where('purchase_id', '!=', NULL)
+        //      ->where('type', '=', 'c')
+        //      ->sum('credit');
+             
+        //   // Fetch all records
+        //   $userData['data'] = $debit_list_two;
+        //   $userData['total_receiving'] = $total_receiving;
+          
+        //   $userData['data_previous'] = $debit_list_two_previous;
+        //   $userData['total_receiving_previous'] = $total_receiving_previous;
+     
+        //   echo json_encode($userData);
+          exit;
+          
+          
+         
+          // Fetch all records
+          $userData['data'] = $debit_list_two;
+     
+          echo json_encode($userData);
+          exit;
+          
+ }
+ 
 
 }

@@ -370,6 +370,10 @@ Route::post('accounts/{id}/supplier_ledger_update', 'AccountsController@supplier
 	Route::get('/select_year/{year}', 'HomeController@select_year')->name('select_year');
 	Route::post('/submit_city', 'HomeController@submit_city')->name('submit_city');
 	Route::post('/update_city', 'HomeController@update_city')->name('update_city');
+	Route::get('accounts/getSupplierRecords/{id}','AccountsController@getSupplierRecords');
+	Route::get('sales/{id}/supplier_balance', 'SaleController@supplier_balance');
+
+	Route::get('customer/{id}/{customer}/{balance}', 'SaleController@customer');
 
 });
 

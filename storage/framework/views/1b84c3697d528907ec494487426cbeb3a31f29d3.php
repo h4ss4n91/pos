@@ -25,7 +25,7 @@
 <section class="forms">
     <div class="container-fluid">
         <div class="card">
-            <div style="background:purple; padding:10px;" class="card-header mt-2">
+            <div style="background:#7c5cc4; padding:10px;" class="card-header mt-2">
                 <h1 style="color:#fff;" class="text-center">Customer <?php echo e(trans('file.Account Statement')); ?></h1>
             </div>
             <div class="card-body">
@@ -360,10 +360,13 @@ $('select[name="account_id"]').on('change', function() {
                  var status = response['data'][i].status;
                 
                     if(bill_no != null){
-                        var bill_no = "<a href='#' class='billHover' onclick='a_bill_hover();' id='"+sale_id+"' data-toggle='tooltip' data-html='true' title='Click Here'><i class='fa fa-eye' aria-hidden='true'></i></a> Bill No: <a class='bill_hover' style='color:blue; font-weight:bold;' target='_blank' href='https://sadaftraders.com/st/sales/"+response['data'][i].bill_no+"/viewinvoice'>"+response['data'][i].bill_no+'</a>';
-                    }else{
+                        var bill_no = "<a href='#' class='billHover' onclick='a_bill_hover();' id='"+sale_id+"' data-toggle='tooltip' data-html='true' title='Click Here'><i class='fa fa-eye' aria-hidden='true'></i></a> Bill No: <a class='bill_hover' style='color:blue; font-weight:bold;' target='_blank' href='http://localhost/cd/pos/sales/"+response['data'][i].bill_no+"/viewinvoice'>"+response['data'][i].bill_no+'</a>';
+                    }else if(sale_id != null){
                        var bill_no  = sale_id;
+                    }else if(sale_return_id != null){
+                       var bill_no  = sale_return_id;
                     }
+                    
                 
                     if(debit != null){
                         currentBalance = debit + currentBalance; 
@@ -387,7 +390,7 @@ $('select[name="account_id"]').on('change', function() {
                    "<td align='center'>" + (i+1) + "</td>" +
                    "<td align='center'>" + new_date + "</td>" +
                    "<td align='center'>" + expires_in + "</td>" +
-                   "<td style='width:250px;' align='center'><a href='http://localhost/cd/pos/sales/" + bill_no + "/edit'>" + bill_no + "</a><span style='color:red;>"+payment_note+"</span><span style='display:block; color:red; font-size:16px;'>"+sale_note+"</span></td>" +
+                   "<td style='width:250px;' align='center'>Sale Invoice <br/><a href='http://localhost/cd/pos/sales/" + bill_no + "/edit'>" + bill_no + "</a><span style='color:red;>"+payment_note+"</span><span style='display:block; color:red; font-size:16px;'>"+sale_note+"</span></td>" +
                    "<td class='receipt' align='center'>" + debit + "</td>" +
                    "<td class='payment' align='center'>" + credit +  "</td>" +
                    "<td class='balance' align='center'>" + currentBalance + "</td>" +
@@ -399,7 +402,7 @@ $('select[name="account_id"]').on('change', function() {
                    "<td align='center'>" + (i+1) + "</td>" +
                    "<td align='center'>" + new_date + "</td>" +
                    "<td align='center'>" + expires_in + "</td>" +
-                   "<td style='width:250px;' align='center'><a href='http://localhost/cd/pos/sales/" + bill_no + "/edit'>" + bill_no + "</a><span style='color:red;'>"+payment_note+"</span><span style='display:block; color:red; font-size:16px;'>"+sale_note+"</span></td>" +
+                   "<td style='width:250px;' align='center'>Sale Invoice <br/><a href='http://localhost/cd/pos/sales/" + bill_no + "/edit'>" + bill_no + "</a><span style='color:red;'>"+payment_note+"</span><span style='display:block; color:red; font-size:16px;'>"+sale_note+"</span></td>" +
                    "<td class='receipt' align='center'>" + debit + "</td>" +
                    "<td class='payment' align='center'>" + credit +  "</td>" +
                    "<td class='balance' align='center'>" + currentBalance + "</td>" +
@@ -458,7 +461,7 @@ $('select[name="account_id"]').on('change', function() {
                  var status = response['data'][i].status;
                     var isRow=1;
                     if(bill_no != null){
-                        var bill_no = "<a href='#' data-toggle='tooltip' data-html='true' title='Click Here'><i class='fa fa-eye' aria-hidden='true'></i></a> Bill No: <a class='bill_hover' style='color:blue; font-weight:bold;' target='_blank' href='https://sadaftraders.com/st/sales/"+response['data'][i].bill_no+"/viewinvoice'>"+response['data'][i].bill_no+'</a>';
+                        var bill_no = "<a href='#' data-toggle='tooltip' data-html='true' title='Click Here'><i class='fa fa-eye' aria-hidden='true'></i></a> Bill No: <a class='bill_hover' style='color:blue; font-weight:bold;' target='_blank' href='http://localhost/cd/pos/sales/"+response['data'][i].bill_no+"/viewinvoice'>"+response['data'][i].bill_no+'</a>';
                     }else{
                        var bill_no  = sale_id;
                     }
@@ -562,7 +565,7 @@ $('select[name="account_id"]').on('change', function() {
                  var status = response['data'][i].status;
                 
                     if(bill_no != null){
-                        var bill_no = "<a href='#' data-toggle='tooltip' data-html='true' title='Click Here'><i class='fa fa-eye' aria-hidden='true'></i></a> Bill No: <a class='bill_hover'  target='_blank' style='color:blue; font-weight:bold;' href='https://sadaftraders.com/st/sales/"+response['data'][i].bill_no+"/viewinvoice'>"+response['data'][i].bill_no+'</a>';
+                        var bill_no = "<a href='#' data-toggle='tooltip' data-html='true' title='Click Here'><i class='fa fa-eye' aria-hidden='true'></i></a> Bill No: <a class='bill_hover'  target='_blank' style='color:blue; font-weight:bold;' href='http://localhost/cd/pos/sales/"+response['data'][i].bill_no+"/viewinvoice'>"+response['data'][i].bill_no+'</a>';
                     }else{
                        var bill_no  = sale_id;
                     }
@@ -662,7 +665,7 @@ $('select[name="account_id"]').on('change', function() {
                  var status = response['data'][i].status;
                     var isRow=1;
                     if(bill_no != null){
-                        var bill_no = "<a href='#' data-toggle='tooltip' data-html='true' title='Click Here'><i class='fa fa-eye' aria-hidden='true'></i></a> Bill No: <a target='_blank' class='bill_hover'  style='color:blue; font-weight:bold;' href='https://sadaftraders.com/st/sales/"+response['data'][i].bill_no+"/viewinvoice'>"+response['data'][i].bill_no+'</a>';
+                        var bill_no = "<a href='#' data-toggle='tooltip' data-html='true' title='Click Here'><i class='fa fa-eye' aria-hidden='true'></i></a> Bill No: <a target='_blank' class='bill_hover'  style='color:blue; font-weight:bold;' href='http://localhost/cd/pos/sales/"+response['data'][i].bill_no+"/viewinvoice'>"+response['data'][i].bill_no+'</a>';
                     }else{
                        var bill_no  = sale_id;
                     }
@@ -775,7 +778,7 @@ $('select[name="account_id"]').on('change', function() {
                  var status = response['data'][i].status;
                 
                     if(bill_no != null){
-                        var bill_no = "<a  href='#' data-toggle='tooltip' data-html='true' title='Click Here'><i class='fa fa-eye' aria-hidden='true'></i></a> Bill No: <a target='_blank' class='bill_hover'  style='color:blue; font-weight:bold;' href='https://sadaftraders.com/st/sales/"+response['data'][i].bill_no+"/viewinvoice'>"+response['data'][i].bill_no+'</a>';
+                        var bill_no = "<a  href='#' data-toggle='tooltip' data-html='true' title='Click Here'><i class='fa fa-eye' aria-hidden='true'></i></a> Bill No: <a target='_blank' class='bill_hover'  style='color:blue; font-weight:bold;' href='http://localhost/cd/pos/sales/"+response['data'][i].bill_no+"/viewinvoice'>"+response['data'][i].bill_no+'</a>';
                     }else{
                        var bill_no  = sale_id;
                     }
@@ -876,7 +879,7 @@ $('select[name="account_id"]').on('change', function() {
                  var status = response['data'][i].status;
                     var isRow=1;
                     if(bill_no != null){
-                        var bill_no = "<a href='#' data-toggle='tooltip' data-html='true' title='Click Here'><i  class='fa fa-eye' aria-hidden='true'></i></a> Bill No: <a class='bill_hover'  style='color:blue; font-weight:bold;' target='_blank' href='https://sadaftraders.com/st/sales/"+response['data'][i].bill_no+"/viewinvoice'>"+response['data'][i].bill_no+'</a>';
+                        var bill_no = "<a href='#' data-toggle='tooltip' data-html='true' title='Click Here'><i  class='fa fa-eye' aria-hidden='true'></i></a> Bill No: <a class='bill_hover'  style='color:blue; font-weight:bold;' target='_blank' href='http://localhost/cd/pos/sales/"+response['data'][i].bill_no+"/viewinvoice'>"+response['data'][i].bill_no+'</a>';
                     }else{
                        var bill_no  = sale_id;
                     }

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Supplier;
 use Illuminate\Validation\Rule;
 use Auth;
+use DB;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use App\Mail\UserNotification;
@@ -67,8 +68,23 @@ class SupplierController extends Controller
             $image->move('public/images/supplier', $imageName);
             $lims_supplier_data['image'] = $imageName;
         }
-        Supplier::create($lims_supplier_data);
+        $suplier_id = Supplier::create($lims_supplier_data);
+
+        $db_id = DB::table('accounts')->insertGetId(array(
+            'account_type' => 'supplier',
+            'accountTypeID' => $suplier_id['id'],
+            'account_no' => $suplier_id['id'],
+            'initial_balance' => 0,
+            'total_balance' => 0,
+            'name' => $lims_supplier_data['name'],
+            'is_default' => 1,
+            'is_active' => 1,
+            'created_at' => date('Y-m-d H:s:i'),
+            'updated_at' =>  date('Y-m-d H:s:i')
+        ));
+
         $message = 'Data inserted successfully';
+
         try{
             Mail::send( 'mail.supplier_create', $lims_supplier_data, function( $message ) use ($lims_supplier_data)
             {

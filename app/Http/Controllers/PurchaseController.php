@@ -338,8 +338,28 @@ class PurchaseController extends Controller
         }
         //return dd($data);
         Purchase::create($data);
-
         $lims_purchase_data = Purchase::latest()->first();
+
+        $paying_method = 'Credit';
+        $lims_payment_data = new Payment();
+        $lims_payment_data->user_id = Auth::id();
+        $lims_account_data = Account::where('is_default', true)->first();
+        $lims_payment_data->account_id = $data['supplier_id'];
+        $lims_payment_data->purchase_id = $lims_purchase_data->id;
+        $data['payment_reference'] = 'spr-'.date("Ymd").'-'.date("his");
+        $lims_payment_data->payment_reference = $data['payment_reference'];
+        $lims_payment_data->amount = $data['grand_total'];
+        $lims_payment_data->change = 0;
+        $lims_payment_data->paying_method = $paying_method;
+        $lims_payment_data->payment_note = NULL;
+        
+        $get_current_year = DB::table('years')->where('current_year','!=',"")->get();
+        $lims_payment_data->year = $get_current_year[0]->current_year;
+        
+        $lims_payment_data->type = "c";
+        $lims_payment_data->credit = $data['grand_total'];
+        $lims_payment_data->save();
+
         $product_id = $data['product_id'];
         $product_code = $data['product_code'];
         $qty = $data['qty'];
