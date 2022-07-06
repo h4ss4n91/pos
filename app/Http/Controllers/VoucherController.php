@@ -113,8 +113,8 @@ class VoucherController extends Controller
                  )
              );
              
-              $account = DB::table('accounts')
-                            ->where('customer_id', '=', $request->account_id)
+                $account = DB::table('accounts')
+                            ->where('account_no', '=', $request->account_id)->where('account_type', '=', 'customer')
                             ->get();
 
              
@@ -128,7 +128,7 @@ class VoucherController extends Controller
                      'credit' => $request->amount,
                      'debit' => NULL,
                      'type' => 'c',
-                     'account_id' => $account[0]->customer_id,
+                     'account_id' => $account[0]->account_no,
                      )
                  ); 
              
@@ -141,7 +141,7 @@ class VoucherController extends Controller
                      'debit' => $request->amount,
                      'credit' => NULL,
                      'type' => 'd',
-                     'account_id' => $account[0]->customer_id,
+                     'account_id' => $account[0]->account_no,
                      )
                  ); 
              }
@@ -326,16 +326,13 @@ class VoucherController extends Controller
             $receive_vouchers = DB::table('receive_vouchers')
                 ->orderBy('id', 'ASC')
                 ->get();
-            
             //$testing = DB::table('receive_vouchers')->orderBy('id', 'ASC')->first();
-            
             return view('voucher.add_purchase_voucher', compact('lims_account_list','receive_voucher_payment_list', 'receive_vouchers', 'lims_products_list', 'list_payment',  'lims_user_list','payment','balance'));
-        
     }
     public function customer_receiving_voucher(){
         //echo "Customer Receiving Voucher";
         //die();
-        $lims_products_list = Customer::where('is_active', true)->orderBy('name', 'ASC')->get();
+        $lims_products_list = Customer::orderBy('name', 'ASC')->get();
         
         return view('voucher.customer_receive_voucher', compact('lims_products_list'));
     }

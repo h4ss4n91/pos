@@ -343,7 +343,7 @@ class SaleController extends Controller
             $lims_payment_data->payment_note = $data['payment_note'];
             
             $get_current_year = DB::table('years')->where('current_year','!=',"")->get();
-            $lims_payment_data->year = $get_current_year[0]->current_year;
+            $lims_payment_data->years = $get_current_year[0]->current_year;
             
             $lims_payment_data->type = "d";
             $lims_payment_data->debit = $data['grand_total'];
@@ -2234,7 +2234,6 @@ class SaleController extends Controller
             ->sum('payments.credit');
             
             $total_latest = $accounts_t_balance_credit_latest - $accounts_t_balance_debit_latest;
-        
             $last_date = DB::table('payments')->orderBy('id', 'desc')->where('account_id', '=', $payment_id)->where('credit', '!=', NULL)->first();
             
             if(isset($last_date->date) ){
@@ -2257,9 +2256,487 @@ class SaleController extends Controller
             $customers = DB::table('customers')->where('id', '=', $id)->get();
             $accounts_balance = DB::table('accounts')->where('account_no', '=', $id)->where('account_type', '=', 'customer')->get();
                 $array = array(
+                    'id' => $accounts_balance[0]->account_no,
                     'name' => $customers[0]->name,
+                    'balance' => 0,
                     'city' => $customers[0]->city);
-                echo json_encode($array);
+                    echo json_encode($array);
         }
+
+        
+
+
+        public function bank_voucher_debit(Request $request){
+
+            $data = $request->all();
+            //dd($data);
+            //die();
+            $receive_voucher_date = $request->input('payment_voucher_date');
+            $customer_id = $request->input('customer_id');
+            $amount = $request->input('qty');
+            $note = $request->input('note');
+            $action = 'debit';
+            
+            for ($i = 0; $i < count($customer_id); $i++) {
+                
+                if($data['qty'][$i] != NULL){
+                
+                $prev_balance = DB::table('accounts')->where('id', '=', $customer_id)->get();
+                    $total_balance = $prev_balance[0]->total_balance - $data['qty'][$i];
+                    $product_qty = DB::table('accounts')
+                          ->where('id', '=', $data['customer_id'][$i])
+                    ->update(['total_balance' => $total_balance]);
+                    
+                    $id = DB::table('bank_vouchers')->insertGetId([
+                            'receive_voucher_date' => $receive_voucher_date,
+                            'bank_id' => $data['customer_id'][$i],
+                            'amount' => $data['qty'][$i],
+                            'note' => $data['note'][$i],
+                            'years' => '2022',
+                            'action' =>  $action
+                        ]);
+                    
+                    $user = User::find(Auth::id());
+                    
+                    DB::table('payments')->insert([
+                            'debit' => $data['qty'][$i],
+                            'payment_reference' => $user->name. '-' . date("d-m-Y - H:i:a"),
+                            'account_id' => $customer_id[$i],
+                            'change' => 0,
+                            'bank_voucher_id' => $id,
+                            'amount' => $data['qty'][$i],
+                            'years' => '2022',
+                            'bank_id' => $data['customer_id'][$i],
+                            
+                            'date' => date('Y-m-d', strtotime($receive_voucher_date)),
+                            'date_2' => date('Y-m-d', strtotime($receive_voucher_date)),
+                            'type' => "d",
+                            'paying_method' => 0,
+                            'payment_note' => $data['note'][$i],
+                            'created_at' => date('Y-m-d H:i:s')
+                        ]);
+                        
+                            
+                }
+                
+                
+            }
+            
+            return redirect()->back()->with('message', 'Receive Voucher has been Submitted Successfully! ');
+        }
+    
+      public function bank_voucher(Request $request){
+        
+        $data = $request->all();
+        //dd($data);
+        //die();
+        
+        $receive_voucher_date = $request->input('payment_voucher_date');
+        $customer_id = $request->input('customer_id');
+        $amount = $request->input('qty');
+        $note = $request->input('note');
+        $action = 'credit';
+        
+        
+             for ($i = 0; $i < count($customer_id); $i++) {
+                 
+                    //$prev_balance = DB::table('accounts')->where('id', '=', $customer_id)->get();
+                    //$total_balance = $prev_balance[0]->total_balance + $data['qty'][$i];
+                    //$product_qty = DB::table('accounts')
+                      //    ->where('id', '=', $data['customer_id'][$i])
+                    //->update(['total_balance' => $total_balance]);
+                if($data['qty'][$i] != NULL){
+                    
+                    
+                    $id = DB::table('bank_vouchers')->insertGetId([
+                            'receive_voucher_date' => $receive_voucher_date,
+                            'bank_id' => $data['customer_id'][$i],
+                            'amount' => $data['qty'][$i],
+                            'note' => $data['note'][$i],
+                            'years' => '2022',
+                            'action' =>  $action
+                        ]);
+                    
+                    $user = User::find(Auth::id());
+                    
+                    DB::table('payments')->insert([
+                            'credit' => $data['qty'][$i],
+                            'payment_reference' => $user->name. '-' . date("d-m-Y - H:i:a"),
+                            'account_id' => $customer_id[$i],
+                            'bank_voucher_id' => $id,
+                            'change' => 0,
+                            'amount' => $data['qty'][$i],
+                            'bank_id' => $customer_id[$i],
+                            'date' => date('Y-m-d', strtotime($receive_voucher_date)),
+                            'date_2' => date('Y-m-d', strtotime($receive_voucher_date)),
+                            'type' => "c",
+                            'years' => '2022',
+                            'paying_method' => 0,
+                            'payment_note' => $data['note'][$i],
+                            'created_at' => date('Y-m-d H:i:s')
+                        ]);
+                        
+                }
+                    
+                        
+               
+                
+            }
+
+        return redirect()->back()->with('message', 'Receive Voucher has been Submitted Successfully! ');
+        
+    }
+    
+    public function expense_voucher_debit(Request $request){
+        
+        $data = $request->all();
+        $receive_voucher_date = $request->input('payment_voucher_date');
+        $customer_id = $request->input('customer_id');
+        $amount = $request->input('qty');
+        $note = $request->input('note');
+        $action = 'debit';
+        
+        for ($i = 0; $i < count($customer_id); $i++) {
+            
+            
+            if($data['qty'][$i] != NULL){
+                
+                    $expense_voucher_id = DB::table('expense_vouchers')->insertGetId([
+                            'receive_voucher_date' => $receive_voucher_date,
+                            'expense_id' => $data['customer_id'][$i],
+                            'amount' => $data['qty'][$i],
+                            'note' => $data['note'][$i],
+                            'years' => '2022',
+                            'action' =>  'debit'
+                        ]);
+                    
+                    $user = User::find(Auth::id());
+                    
+                    DB::table('payments')->insert([
+                            'debit' => $data['qty'][$i],
+                            'payment_reference' => $user->name. '-' . date("d-m-Y - H:i:a"),
+                            'account_id' => $customer_id[$i],
+                            'expense_id' => $customer_id[$i],
+                            'change' => 0,
+                            'expense_voucher_id' => $expense_voucher_id,
+                            'amount' => $data['qty'][$i],
+                            'date' => date('Y-m-d', strtotime($receive_voucher_date)),
+                            'date_2' => date('Y-m-d', strtotime($receive_voucher_date)),
+                            'type' => "d",
+                            'paying_method' => 0,
+                            'years' => '2022',
+                            'payment_note' => $data['note'][$i],
+                            'created_at' => date('Y-m-d H:i:s')
+                        ]);
+                        
+            }
+                
+        }
+        
+        return redirect()->back()->with('message', 'Expense Voucher has been Submitted Successfully! ');
+        
+    }
+    public function expense_voucher(Request $request){
+        
+        $data = $request->all();
+        //dd($data);
+        //die();
+        
+        $receive_voucher_date = $request->input('payment_voucher_date');
+        $customer_id = $request->input('customer_id');
+        $amount = $request->input('qty');
+        $note = $request->input('note');
+        $action = 'credit';
+          
+             for ($i = 0; $i < count($customer_id); $i++) {
+                 
+                 
+                 if($data['qty'][$i] != NULL){
+                     
+                     $expense_voucher_id = DB::table('expense_vouchers')->insertGetId([
+                            'receive_voucher_date' => $receive_voucher_date,
+                            'expense_id' => $data['customer_id'][$i],
+                            'amount' => $data['qty'][$i],
+                            'note' => $data['note'][$i],
+                            'years' => '2022',
+                            'action' =>  $action
+                        ]);
+                    
+                    $user = User::find(Auth::id());
+                    
+                    DB::table('payments')->insert([
+                            'credit' => $data['qty'][$i],
+                            'payment_reference' => $user->name. '-' . date("d-m-Y - H:i:a"),
+                            'account_id' => $customer_id[$i],
+                            'expense_id' => $customer_id[$i],
+                            'expense_voucher_id' => $expense_voucher_id,
+                            'change' => 0,
+                            'amount' => $data['qty'][$i],
+                            'date' => date('Y-m-d', strtotime($receive_voucher_date)),
+                            'date_2' => date('Y-m-d', strtotime($receive_voucher_date)),
+                            'type' => "c",
+                            'paying_method' => 0,
+                            'years' => '2022',
+                            'payment_note' => $data['note'][$i],
+                            'created_at' => date('Y-m-d H:i:s')
+                        ]);
+                     
+                 }
+                    
+                        
+            }
+
+        return redirect()->back()->with('message', 'Receive Voucher has been Submitted Successfully! ');
+        
+    }
+    
+    public function customerPaymentVoucher(Request $request){
+        
+        $data = $request->all();
+        //dd($data);
+        //die();
+        
+        $receive_voucher_date = $request->input('receive_voucher_date');
+        $customer_id = $request->input('customer_id');
+        $amount = $request->input('qty');
+        $note = $request->input('note');
+        
+          
+           for ($i = 0; $i < count($customer_id); $i++) {
+               if($data['qty'][$i] != NULL){
+                    $receive_voucher_id = DB::table('receive_vouchers')->insertGetId([
+                            'receive_voucher_date' => $receive_voucher_date,
+                            'customer_id' => $data['customer_id'][$i],
+                            'amount' => $data['qty'][$i],
+                            'note' => $data['note'][$i],
+                            'years' => '2022',
+                            'action' =>  'debit'
+                        ]);
+                    
+                    $user = User::find(Auth::id());
+                    
+                    DB::table('payments')->insert([
+                            'debit' => $data['qty'][$i],
+                            'payment_reference' => $user->name. '-' . date("d-m-Y - H:i:a"),
+                            'account_id' => $customer_id[$i],
+                            'change' => 0,
+                            'receive_voucher_id' => $receive_voucher_id,
+                            'amount' => $data['qty'][$i],
+                            'user_id' => $user->id,
+                            'sale_id' => 'Remaining Amount',
+                            'years' => '2022',
+                            'date' => date('Y-m-d', strtotime($receive_voucher_date)),
+                            'date_2' => date('Y-m-d', strtotime($receive_voucher_date)),
+                            'type' => "d",
+                            'paying_method' => 0,
+                            'payment_note' => $data['note'][$i],
+                            'created_at' => date('Y-m-d H:i:s')
+                        ]);
+            }   
+          }
+             
+
+        return redirect()->back()->with('message', 'Receive Voucher has been Submitted Successfully! ');
+        
+    }
+    
+    
+    public function receive_voucher(Request $request){
+        
+        $data = $request->all();
+        
+        $oldDate = $request->input('receive_voucher_date');
+        $receive_voucher_date = $request->input('receive_voucher_date');
+        $customer_id = $request->input('customer_id');
+        $amount = $request->input('qty');
+        $note = $request->input('note');
+        
+        
+            for ($i = 0; $i < count($customer_id); $i++) {
+                if($data['qty'][$i] != NULL){         
+                    $receive_voucher_id = DB::table('receive_vouchers')->insertGetId([
+                            'receive_voucher_date' => $receive_voucher_date,
+                            'customer_id' => $data['customer_id'][$i],
+                            'amount' => $data['qty'][$i],
+                            'note' => $data['note'][$i],
+                            'years' => '2022',
+                            'action' =>  'credit'
+                        ]);
+                    
+                    $user = User::find(Auth::id());
+                    
+                    DB::table('payments')->insert([
+                            'credit' => $data['qty'][$i],
+                            'payment_reference' => $user->name. '-' . date("d-m-Y - H:i:a"),
+                            'account_id' => $customer_id[$i],
+                            'change' => 0,
+                            'receive_voucher_id' => $receive_voucher_id,
+                            'amount' => $data['qty'][$i],
+                            'sale_id' => 'Receiving',
+                            'date' => date('Y-m-d', strtotime($receive_voucher_date)),
+                            'date_2' => date('Y-m-d', strtotime($receive_voucher_date)),
+                            'type' => "c",
+                            'user_id' => $user->id,
+                            'years' => '2022',
+                            'paying_method' => 0,
+                            'payment_note' => $data['note'][$i],
+                            'created_at' => date('Y-m-d H:i:s')
+                        ]);
+            }
+        }
+        
+             
+
+        return redirect()->back()->with('message', 'Receive Voucher has been Submitted Successfully! ');
+        
+    }
+    
+    public function supplier_receive_voucher(Request $request){
+        
+        {
+        
+        $data = $request->all();
+        //dd($data);
+        //die();
+        
+        $receive_voucher_date = $request->input('receive_voucher_date');
+        $supplier_id = $request->input('customer_id');
+        $amount = $request->input('qty');
+        $note = $request->input('note');
+        
+        
+            for ($i = 0; $i < count($supplier_id); $i++) {
+                if($data['qty'][$i] != NULL){
+                    $payment_voucher_id = DB::table('payment_vouchers')->insertGetId([
+                            'receive_voucher_date' => $receive_voucher_date,
+                            'supplier_id' => $data['customer_id'][$i],
+                            'amount' => $data['qty'][$i],
+                            'note' => $data['note'][$i],
+                            'years' => '2022',
+                            'action' =>  'credit'
+                        ]);
+                    $user = User::find(Auth::id());
+                    DB::table('payments')->insert([
+                            'credit' => $data['qty'][$i],
+                            'payment_reference' => $user->name. '-' . date("d-m-Y - H:i:a"),
+                            'account_id' => $supplier_id[$i],
+                            'change' => 0,
+                            'payment_voucher_id' => $payment_voucher_id,
+                            'amount' => $data['qty'][$i],
+                            'purchase_id' => 'Payments',
+                            'date' => date('Y-m-d', strtotime($receive_voucher_date)),
+                            'date_2' => date('Y-m-d', strtotime($receive_voucher_date)),
+                            'type' => "d",
+                            'years' => '2022',
+                            'paying_method' => 0,
+                            'payment_note' => $data['note'][$i],
+                            'created_at' => date('Y-m-d H:i:s')
+                        ]);
+            }
+        }
+            
+            
+        return redirect()->back()->with('message', 'Payment Voucher has been Submitted Successfully! ');
+        
+    }
+        
+        
+    }
+    
+    
+    public function payment_voucher(Request $request){
+        
+        $data = $request->all();
+        //dd($data);
+        //die();
+        
+        $receive_voucher_date = $request->input('receive_voucher_date');
+        $supplier_id = $request->input('customer_id');
+        $amount = $request->input('qty');
+        $note = $request->input('note');
+        
+        
+           
+            for ($i = 0; $i < count($supplier_id); $i++) {
+                if($data['qty'][$i] != NULL){
+                    $payment_voucher_id = DB::table('payment_vouchers')->insertGetId([
+                            'receive_voucher_date' => $receive_voucher_date,
+                            'supplier_id' => $data['customer_id'][$i],
+                            'amount' => $data['qty'][$i],
+                            'years' => '2022',
+                            'note' => $data['note'][$i],
+                            'action' =>  'debit'
+                        ]);
+                    $user = User::find(Auth::id());
+                    DB::table('payments')->insert([
+                            'debit' => $data['qty'][$i],
+                            'payment_reference' => $user->name. '-' . date("d-m-Y - H:i:a"),
+                            'account_id' => $supplier_id[$i],
+                            'change' => 0,
+                            'payment_voucher_id' => $payment_voucher_id,
+                            'amount' => $data['qty'][$i],
+                            'purchase_id' => 'Payments',
+                            'date' => date('Y-m-d', strtotime($receive_voucher_date)),
+                            'date_2' => date('Y-m-d', strtotime($receive_voucher_date)),
+                            'type' => "d",
+                            'years' => '2022',
+                            'paying_method' => 0,
+                            'payment_note' => $data['note'][$i],
+                            'created_at' => date('Y-m-d H:i:s')
+                        ]);
+            }
+            
+        }
+           
+            
+        return redirect()->back()->with('message', 'Payment Voucher has been Submitted Successfully! ');
+        
+    }
+    
+    
+    public function expense_balance($id){
+        
+        //$customers = DB::table('suppliers')->where('id', '=', $id)->get();
+    	$accounts_balance = DB::table('accounts')->where('id', '=', $id)->get();
+
+        	$array = array(
+                'name' => $accounts_balance[0]->name,
+                'balance' => $accounts_balance[0]->initial_balance,
+                'city' => $accounts_balance[0]->account_no);
+            echo json_encode($array);
+        
+    }
+    
+    
+    public function bank_balance($id){
+        
+        //$customers = DB::table('suppliers')->where('id', '=', $id)->get();
+    	$accounts_balance = DB::table('accounts')->where('id', '=', $id)->get();
+
+        	$array = array(
+                'name' => $accounts_balance[0]->name,
+                'balance' => $accounts_balance[0]->initial_balance,
+                'city' => $accounts_balance[0]->account_no);
+            echo json_encode($array);
+        
+    }
+    
+    public function supplier_city($id){
+        
+
+    	$customers = DB::table('suppliers')->where('id', '=', $id)->get();
+    	$accounts_balance = DB::table('accounts')
+                            ->where('account_no', '=', $id)->where('account_type', '=', 'supplier')->get();
+
+        	$array = array(
+                'name' => $customers[0]->name,
+                'balance' => 0,
+                'city' => $customers[0]->city);
+            echo json_encode($array);
+
+        
+    }
+    
+
     
 }

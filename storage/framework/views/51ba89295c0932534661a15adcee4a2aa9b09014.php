@@ -685,14 +685,10 @@ function addRow(counter){
                 fieldText : 'text',
                 fieldValue: 'value',
                 filterOpen: true
-                
-                
         });
     
     
-    
        $('#demo-'+counter).change(function(){
-        
             $('.packing'+counter).focus();
             var id = $(this).val();
             $.ajax( {
@@ -711,6 +707,8 @@ function addRow(counter){
                 $('#customer_idd-'+counter).val(product.urdu_name);
                 $('.packing'+counter).val(product.balance);
                 $('.qty'+counter).val();
+                $('.customer_idd'+counter).val(product.id);
+                
                 $('#discount'+counter).val();
                 $('#sub_total'+counter).val(product.price);
                 $('#product_id'+counter).val(product.id);
@@ -798,6 +796,7 @@ $(document).ready(function(){
                 $('.lot1').val(product.city);
                 $('#customer_idd-1').val(product.urdu_name);
                 $('.packing1').val(product.balance);
+                $('.customer_idd'+counter).val(product.id);
                 $('.qty1').val();
                 $('#discount1').val();
                 $('#sub_total1').val(product.price);
@@ -900,35 +899,33 @@ $(document).ready(function(){
 
 
 
-function test(id){
-    var option_id = $("#demo-"+id).val();
-    $.ajax( {
-        type:'GET',
-        header:{
-        'X-CSRF-TOKEN':$('meta[name="csrf-token"]').attr('content')
-        },
-        url:"http://localhost/cd/pos/sales/"+option_id,
-    })
-    .done(function(data) {
-        var product = jQuery.parseJSON(data);
-        $('.price'+id).val(product.price);
-        $('#urdu_name'+id).val(product.urdu_name);
-        $('.lot'+id).val(product.lot);
-        $('.packing'+id).val(product.balance);
-        $('.qty'+id).val();
-        $('.discount'+id).val();
-        $('.sub_total'+id).val(product.price);
-        $('.product_id'+id).val(product.id);
-        $('.code'+id).val(product.code);
-        $('.sale_unit'+id).val(product.sale_unit);
-        sessionStorage.setItem("product_id", product.id);
-    })
-    .fail(function() {
-        alert("error");
-    });
-    
-
-}
+            function test(id){
+                var option_id = $("#demo-"+id).val();
+                $.ajax( {
+                    type:'GET',
+                    header:{
+                    'X-CSRF-TOKEN':$('meta[name="csrf-token"]').attr('content')
+                    },
+                    url:"http://localhost/cd/pos/sales/"+option_id,
+                })
+                .done(function(data) {
+                    var product = jQuery.parseJSON(data);
+                    $('.price'+id).val(product.price);
+                    $('#urdu_name'+id).val(product.urdu_name);
+                    $('.lot'+id).val(product.lot);
+                    $('.packing'+id).val(product.balance);
+                    $('.qty'+id).val();
+                    $('.discount'+id).val();
+                    $('.sub_total'+id).val(product.price);
+                    $('.product_id'+id).val(product.id);
+                    $('.code'+id).val(product.code);
+                    $('.sale_unit'+id).val(product.sale_unit);
+                    sessionStorage.setItem("product_id", product.id);
+                })
+                .fail(function() {
+                    alert("error");
+                });
+            }
 
             $('#demo-1').inputpicker({
                 data:[ <?php $__currentLoopData = $lims_products_list; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $product): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>

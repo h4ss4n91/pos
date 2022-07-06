@@ -1,10 +1,10 @@
-@extends('layout.main') @section('content')
+ <?php $__env->startSection('content'); ?>
 
-@if(session()->has('not_permitted'))
-  <div class="alert alert-danger alert-dismissible text-center"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>{{ session()->get('not_permitted') }}</div> 
-@endif
+<?php if(session()->has('not_permitted')): ?>
+  <div class="alert alert-danger alert-dismissible text-center"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><?php echo e(session()->get('not_permitted')); ?></div> 
+<?php endif; ?>
 
-    <link href="{{asset('public/src/jquery.inputpicker.css')}}" rel="stylesheet" type="text/css">
+    <link href="<?php echo e(asset('public/src/jquery.inputpicker.css')); ?>" rel="stylesheet" type="text/css">
 
     <!-- Bootstrap DatePicker -->
     
@@ -205,14 +205,15 @@
             <h1 style="background:purple; padding:10px; text-align:center; color:#fff;"> C U S T O M E R   &nbsp; &nbsp;  R E C E I V E  &nbsp; &nbsp;  V O U C H E R   &nbsp; &nbsp;  (CREDIT) </h1>
             
                     <div style="padding:0px !important" class="card-body">
-                        {!! Form::open(['url' => 'sales/321/receive_voucher', 'method' => 'post', 'id'=> 'inputform', 'onsubmit'=>'return monitor()', 'files' => true, 'class' => 'payment-form']) !!}
+                        <?php echo Form::open(['url' => 'sales/321/receive_voucher', 'method' => 'post', 'id'=> 'inputform', 'onsubmit'=>'return monitor()', 'files' => true, 'class' => 'payment-form']); ?>
+
                         <div style="padding:50px; " class="row">
                             <div class="col-md-12">
                                 
                                 <div style="width:97% !important;" class="row">
                                     <div class="col-md-3">
                                         <label style="color:#000;font-weight:bold;font-size:21px;">Date</label>
-                                          <input name="receive_voucher_date" type="date" class="arrow-togglable form-control date-input" value="@php echo date('d-m-Y');@endphp"/>
+                                          <input name="receive_voucher_date" type="date" class="arrow-togglable form-control date-input" value="<?php echo date('d-m-Y');?>"/>
                                     </div>
                                 </div>
                             
@@ -282,7 +283,8 @@
                                 
                             </div>
                         </div>
-                        {!! Form::close() !!}
+                        <?php echo Form::close(); ?>
+
                     </div>
                 </div>
                 
@@ -297,7 +299,7 @@
 
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
-<script src="{{asset('public/src/jquery.inputpicker.js')}}"></script>
+<script src="<?php echo e(asset('public/src/jquery.inputpicker.js')); ?>"></script>
 <script type="text/javascript">
 
         $(function(){
@@ -670,9 +672,9 @@ function addRow(counter){
     
          
     $('#demo-'+counter).inputpicker({
-       data:[ @foreach($lims_products_list as $product)
-                        {value:"{{$product->id}}",text:"{{$product->name}}",urdu:"{{$product->city}}"},
-                     @endforeach
+       data:[ <?php $__currentLoopData = $lims_products_list; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $product): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                        {value:"<?php echo e($product->id); ?>",text:"<?php echo e($product->name); ?>",urdu:"<?php echo e($product->city); ?>"},
+                     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 ],
                 fields:[
                      {name:'value',text:'ID'},
@@ -705,8 +707,6 @@ function addRow(counter){
                 $('#customer_idd-'+counter).val(product.urdu_name);
                 $('.packing'+counter).val(product.balance);
                 $('.qty'+counter).val();
-                $('.customer_idd'+counter).val(product.id);
-                
                 $('#discount'+counter).val();
                 $('#sub_total'+counter).val(product.price);
                 $('#product_id'+counter).val(product.id);
@@ -794,7 +794,6 @@ $(document).ready(function(){
                 $('.lot1').val(product.city);
                 $('#customer_idd-1').val(product.urdu_name);
                 $('.packing1').val(product.balance);
-                $('.customer_idd'+counter).val(product.id);
                 $('.qty1').val();
                 $('#discount1').val();
                 $('#sub_total1').val(product.price);
@@ -926,9 +925,9 @@ $(document).ready(function(){
             }
 
             $('#demo-1').inputpicker({
-                data:[ @foreach($lims_products_list as $product)
-                        {value:"{{$product->id}}",text:"{{$product->name}}",urdu:"{{$product->city}}"},
-                     @endforeach
+                data:[ <?php $__currentLoopData = $lims_products_list; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $product): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                        {value:"<?php echo e($product->id); ?>",text:"<?php echo e($product->name); ?>",urdu:"<?php echo e($product->city); ?>"},
+                     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 ],
                 fields:[
                      {name:'value',text:'Id'},
@@ -1032,8 +1031,9 @@ function resr(){
 
 }
 </script>
-@endsection @section('scripts')
+<?php $__env->stopSection(); ?> <?php $__env->startSection('scripts'); ?>
 
 
       
-@endsection
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layout.main', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

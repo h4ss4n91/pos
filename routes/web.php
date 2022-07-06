@@ -325,7 +325,6 @@ Route::post('accounts/{id}/supplier_ledger_edit', 'AccountsController@supplier_l
 Route::post('accounts/{id}/customer_ledger_update', 'AccountsController@customer_ledger_update');
 Route::post('accounts/{id}/supplier_ledger_update', 'AccountsController@supplier_ledger_update');
 
-	
 	//HRM routes
 	Route::post('departments/deletebyselection', 'DepartmentController@deleteBySelection');
 	Route::resource('departments', 'DepartmentController');
@@ -374,6 +373,19 @@ Route::post('accounts/{id}/supplier_ledger_update', 'AccountsController@supplier
 	Route::get('sales/{id}/supplier_balance', 'SaleController@supplier_balance');
 
 	Route::get('customer/{id}/{customer}/{balance}', 'SaleController@customer');
+	Route::post('sales/{id}/receive_voucher', 'SaleController@receive_voucher');
+
+	Route::post('sales/{id}/receive_voucher', 'SaleController@receive_voucher');
+	Route::post('sales/{id}/customerPaymentVoucher', 'SaleController@customerPaymentVoucher');
+	Route::post('sales/{id}/expense_voucher', 'SaleController@expense_voucher');
+	Route::post('sales/{id}/expense_voucher_debit', 'SaleController@expense_voucher_debit');
+	Route::post('sales/{id}/bank_voucher', 'SaleController@bank_voucher');
+	Route::post('sales/{id}/bank_voucher_debit', 'SaleController@bank_voucher_debit');
+	Route::post('sales/{id}/payment_voucher', 'SaleController@payment_voucher');
+	Route::post('sales/{id}/supplier_receive_voucher', 'SaleController@supplier_receive_voucher');
+	Route::post('sales/receive_voucher/receive/voucher', 'SaleController@receive_voucher');
+	Route::get('sales/{id}/supplier_city', 'SaleController@supplier_city');
+	
 
 });
 
