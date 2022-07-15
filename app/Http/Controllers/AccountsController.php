@@ -34,7 +34,7 @@ class AccountsController extends Controller
     {
         //
     }
-    
+
     public function show($id)
     {
         //
@@ -387,6 +387,153 @@ class AccountsController extends Controller
           exit;
           
  }
+
+ public function checkRecords($id){
+        
+    $payment = str_replace($id, 'payment_', $id);
+    $payment_id = str_replace('payment_', '', $id);
+    
+    
+     $current_balance_credit = DB::table('payments')
+        ->where('account_id', '=', $payment_id)
+        ->where('sale_id', '!=', NULL)
+        ->where('type', '=', 'c')
+        ->sum('credit');
+        
+    $current_balance_debit = DB::table('payments')
+        ->where('account_id', '=', $payment_id)
+        ->where('sale_id', '!=', NULL)
+        ->where('type', '=', 'd')
+        ->sum('debit');
+        
+    return $current_balance_debit - $current_balance_credit;
+        
+}
+
+
+ public function getEXPRecords($id){
+        
+    $payment = str_replace($id, 'payment_', $id);
+    $payment_id = str_replace('payment_', '', $id);
+    
+    
+    
+        $debit_list_two = DB::table('payments as pay')
+                 ->where('pay.account_id',$payment_id)
+    
+                 ->orderBy('date_2','ASC')
+                 ->select("pay.*", DB::raw('DATEDIFF(NOW(), date_2) as expires_in, DATE_FORMAT(pay.date_2, "%d-%m-%Y") as formatted_date'))
+                 ->get();
+    
+    $total_receiving = DB::table('payments')
+        ->where('account_id', '=', $payment_id)
+    
+        ->where('type', '=', 'c')
+        ->sum('credit');
+        
+    $total_receiving = DB::table('payments')
+        ->where('account_id', '=', $payment_id)
+    
+        ->where('type', '=', 'c')
+        ->sum('credit');
+        
+        
+        
+    $current_balance_credit = DB::table('payments')
+        ->where('account_id', '=', $payment_id)
+    
+        ->where('type', '=', 'c')
+        ->sum('credit');
+        
+    $current_balance_debit = DB::table('payments')
+        ->where('account_id', '=', $payment_id)
+    
+        ->where('type', '=', 'd')
+        ->sum('debit');
+     
+     $userData['total_debit'] = $current_balance_debit;
+     $userData['total_credit'] = $current_balance_credit;
+     
+     // Fetch all records
+     $userData['data'] = $debit_list_two;
+     $userData['total_receiving'] = $total_receiving;
+     
+     
+
+     echo json_encode($userData);
+     exit;
+     
+     
+    
+     // Fetch all records
+     $userData['data'] = $debit_list_two;
+
+     echo json_encode($userData);
+     exit;
+     
+}
+
+public function getBankRecords_two($id){
+        
+    $payment = str_replace($id, 'payment_', $id);
+    $payment_id = str_replace('payment_', '', $id);
+    
+    
+    
+        $debit_list_two = DB::table('payments as pay')
+                 ->where('pay.account_id',$payment_id)
+    
+                 ->orderBy('date_2','ASC')
+                 ->select("pay.*", DB::raw('DATEDIFF(NOW(), date_2) as expires_in, DATE_FORMAT(pay.date_2, "%d-%m-%Y") as formatted_date'))
+                 ->get();
+    
+    $total_receiving = DB::table('payments')
+        ->where('account_id', '=', $payment_id)
+    
+        ->where('type', '=', 'c')
+        ->sum('credit');
+        
+    $total_receiving = DB::table('payments')
+        ->where('account_id', '=', $payment_id)
+    
+        ->where('type', '=', 'c')
+        ->sum('credit');
+        
+        
+        
+    $current_balance_credit = DB::table('payments')
+        ->where('account_id', '=', $payment_id)
+    
+        ->where('type', '=', 'c')
+        ->sum('credit');
+        
+    $current_balance_debit = DB::table('payments')
+        ->where('account_id', '=', $payment_id)
+    
+        ->where('type', '=', 'd')
+        ->sum('debit');
+     
+     $userData['total_debit'] = $current_balance_debit;
+     $userData['total_credit'] = $current_balance_credit;
+     
+     // Fetch all records
+     $userData['data'] = $debit_list_two;
+     $userData['total_receiving'] = $total_receiving;
+     
+     
+
+     echo json_encode($userData);
+     exit;
+     
+     
+    
+     // Fetch all records
+     $userData['data'] = $debit_list_two;
+
+     echo json_encode($userData);
+     exit;
+     
+}
  
 
 }

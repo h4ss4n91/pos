@@ -352,7 +352,6 @@ Route::post('accounts/{id}/supplier_ledger_update', 'AccountsController@supplier
 	Route::get('my-transactions/{year}/{month}', 'HomeController@myTransaction');
 
 	Route::post('accounts/supplierAccountStatement', 'AccountsController@supplierAccountStatement')->name('accounts.supplier-statement');
-
 	Route::get('sales/{id}/customer_balance', 'SaleController@customer_balance');
 
 	Route::get('accounts/getRecords/{id}','AccountsController@getRecords');
@@ -375,7 +374,6 @@ Route::post('accounts/{id}/supplier_ledger_update', 'AccountsController@supplier
 	Route::get('customer/{id}/{customer}/{balance}', 'SaleController@customer');
 	Route::post('sales/{id}/receive_voucher', 'SaleController@receive_voucher');
 
-	Route::post('sales/{id}/receive_voucher', 'SaleController@receive_voucher');
 	Route::post('sales/{id}/customerPaymentVoucher', 'SaleController@customerPaymentVoucher');
 	Route::post('sales/{id}/expense_voucher', 'SaleController@expense_voucher');
 	Route::post('sales/{id}/expense_voucher_debit', 'SaleController@expense_voucher_debit');
@@ -385,6 +383,13 @@ Route::post('accounts/{id}/supplier_ledger_update', 'AccountsController@supplier
 	Route::post('sales/{id}/supplier_receive_voucher', 'SaleController@supplier_receive_voucher');
 	Route::post('sales/receive_voucher/receive/voucher', 'SaleController@receive_voucher');
 	Route::get('sales/{id}/supplier_city', 'SaleController@supplier_city');
+
+	Route::get('sales/{id}/expense_balance', 'SaleController@expense_balance');
+	Route::get('sales/{id}/bank_balance', 'SaleController@bank_balance');
+
+	
+	
+	Route::get('accounts/getEXPRecords/{id}','AccountsController@getEXPRecords');
 	
 
 });

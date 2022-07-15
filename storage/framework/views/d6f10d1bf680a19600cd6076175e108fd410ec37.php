@@ -195,28 +195,19 @@
                 
     </style>
  
-<section style="padding:0px;" class="forms">
+<section style="padding:20px;" class="forms">
     <div style="padding-right:50px !important; padding-left:50px !important" class="container-fluid">
         
         <div class="row">
 
-            <div class="col-md-12">
+            <div class="col-md-8">
                 <div class="card">
-            <h1 style="background:cyan; padding:10px; text-align:center; color:#000;"> C U S T O M E R   &nbsp; &nbsp;  P A Y M E N T  &nbsp; &nbsp;  V O U C H E R   &nbsp; &nbsp;  (DEBIT) </h1>
+                        <h1 style="background:purple; padding:10px; text-align:center; color:#fff;"> L I S T    &nbsp; &nbsp;   C A S H   &nbsp; &nbsp;  I N  &nbsp; &nbsp;  H A N D    </h1>
             
                     <div style="padding:0px !important" class="card-body">
-                        <?php echo Form::open(['url' => 'sales/321/customerPaymentVoucher', 'method' => 'post', 'id'=> 'inputform', 'onsubmit'=>'return monitor()', 'files' => true, 'class' => 'payment-form']); ?>
-
-                        <div style="padding:50px; " class="row">
+                        
+                        <div style="padding:5px; " class="row">
                             <div class="col-md-12">
-                                
-                                <div style="width:97% !important;" class="row">
-                                    <div class="col-md-3">
-                                        <label style="color:#000;font-weight:bold;font-size:21px;">Date</label>
-                                          <input name="receive_voucher_date" type="date" class="arrow-togglable form-control date-input" value="<?php echo date('d-m-Y');?>"/>
-                                    </div>
-                                </div>
-                            
                               <div style="width:99% !important; height:424px; overflow:auto;" class="row mt-12">
                                   
                                     <div class="col-md-12">
@@ -225,34 +216,36 @@
                                                 <table class="order-list">
                                                     <thead>
                                                         <tr>
-                                                            <th style="width:100px !important;" >ID</th>
-                                                            <th>Party Name</th>
-                                                            <th style="width:200px;">City</th>
-                                                            <th style="width:200px;">Previous Balance</th>
-                                                            <th style="width:200px;">Amount</th>
-                                                            <th style="width:500px;">Note </th>
+                                                            <th>Date</th>
+                                                            <th style="width:200px;" >Cash In Hand</th>
+                                                            <th>Action</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
+                                                        <?php $__currentLoopData = $cash_in_hand; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $row_cash_in_hand): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                        
                                                         <tr>
-                                                            <td><input style="width:100px !important;"  class="arrow-togglable form-control customer_idd" name="customer_idd[]" id="customer_idd-1"/></td>
-                                                            <td><input style="width:350px !important;"  class="arrow-togglable form-control product-id" name="customer_id[]" id="demo-1"/></td>
-                                                            <td><input oninput="myinput(this.id,this.name)" class="arrow-togglable form-control lot1" type="text" id="1" name="lot[]" readonly/></td>
-                                                            <td><input class='arrow-togglable form-control packing1' type='text'  name='packing' readonly value=""/></td>
-                                                            <td><input  oninput="myinput(this.id,this.alt)" onkeypress="nextinput(this.id,this.alt)" alt="qty" class="arrow-togglable form-control qty1" type="text" id="1" name="qty[]"/></td>
-                                                            <td><input  oninput="myinput(this.id,this.alt)" alt="add" class="arrow-togglable form-control add_w1" type="text" id="1" name="note[]" onkeydown="keyAddw(event)"/></td>
+                                                            <td>
+                                                                    <?php echo e($row_cash_in_hand->created_at); ?>
+
+                                                            </td>
+                                                            <td>
+                                                                    <?php echo e($row_cash_in_hand->cash_in_hand); ?>
+
+                                                            </td>
+                                                            <td>
+                                                                Edit | Delete
+                                                            </td>
                                                         </tr>
+                                                        
+                                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                                        
                                                     </tbody>
                                                     <tfoot style="background:#000" class="tfoot active">
                                                         <tr>
-                                                            <th></th>
-                                                            <th style="width:145px;"></th>
-                                                            <th></th>
-                                                            <th style="text-align:left; color:#fff; font-weight:bold; font-size:21px;" id="total_qty"></th>
-                                                            <input id="total_qty_two" value="" name="total_qty_two" type="hidden"/>
-                                                            <th style="text-align:left; color:#fff; font-weight:bold; font-size:21px;"></th>
-                                                            <th style="text-align:left; color:#fff; font-weight:bold; font-size:21px;"></th>
-                                                            <th style="text-align:left; color:#fff; font-weight:bold; font-size:21px;"></th>
+                                                            <th>Date</th>
+                                                            <th style="width:200px;" >Cash In Hand</th>
+                                                            <th>Action</th>
                                                         </tr>
                                                     </tfoot>
                                                 </table>
@@ -260,39 +253,30 @@
                                         </div>
                                     </div>
                                 </div>
-                              
-                                
-                            
-                                <div class="row">
-                                    <div class="col-md-12">  
-                                            <table style="width:100%; background:#e9ecef">
-                                                <tr>
-                                                    <td>
-                                                        <div class="form-group">
-                                                            <input class="btn3d btn btn-primary btn-lg" id="submit-button" name="sub" type="submit" value="Save Receive Voucher">
-                                                        </div>
-                                                        <!-- span id="currentBalance"></span -->
-                                                    </td>
-                                                </tr>
-                                            </table>
-                                    <div>
-
-                                </div>
-                                
-                                
                             </div>
                         </div>
-                        <?php echo Form::close(); ?>
-
+                        
                     </div>
                 </div>
+            </div>
                 
-           
-            
+            <div class="col-md-4">
+                <div class="card">
+                        <h1 style="background:green; padding:10px; text-align:center; color:#fff;"> A D D     &nbsp; &nbsp;    C A S H     &nbsp; &nbsp;    I N     &nbsp; &nbsp;    H A N D  </h1>
+                                <form action="<?php echo e(url('receive-voucher/7870/add_cash_in_hand')); ?>" method="POST">
+                                    <?php echo csrf_field(); ?>
+                                        <div class="container">
+                                                <label style="color:#000;font-weight:bold;font-size:21px;">Date</label>
+                                                <input name="date" type="date" class="arrow-togglable form-control date-input"/>
+                                                <label style="color:#000;font-weight:bold;font-size:21px;">Cash in Hand</label>
+                                                <input type="text" name="cashInHand" class="form-control"/>
+                                                <input type="submit" name="submit" value="Submit" class="form-control"/>
+                                        </div>
+                                    
+                            </form>
+                </div>
             </div>
         </div>
-    </div>
-   
    
 </section>
 
@@ -301,8 +285,76 @@
 <script src="<?php echo e(asset('public/src/jquery.inputpicker.js')); ?>"></script>
 <script type="text/javascript">
 
+        var url = 'http://sadaftraders.com/st/api/products/get_new_products';
+
+            $.ajax( {
+                type:'GET',
+                header:{
+                'X-CSRF-TOKEN':$('meta[name="csrf-token"]').attr('content')
+                },
+                url:url,
+            })
+            .done(function(data) {
+                //var balance = jQuery.parseJSON(data);
+                //alert(balance);
+                var length = 'New Products ( '+data.length+' )';
+                $('#remaining_product').text(length);
+            })
+            .fail(function() {
+               // alert("error");
+            });
+
+
+
+        var elements = document.getElementsByClassName("arrow-togglable");
+        var currentIndex = 0;
+    
+        function download_product(){
+        var url = 'http://sadaftraders.com/st/api/products/get_new_products';
+        $.ajax( {
+                type:'GET',
+                header:{
+                'X-CSRF-TOKEN':$('meta[name="csrf-token"]').attr('content')
+                },
+                url:url,
+            })
+            .done(function(data) {
+                //console.log(data);
+                            // ARRAYS
+                            $.each(data, function(index, value) {
+                            //console.log(value);
+                            // Will stop running after "three"
+                                $.ajax({
+                                    type:'GET',
+                                        header:{
+                                            'X-CSRF-TOKEN':$('meta[name="csrf-token"]').attr('content')
+                                            },
+                                    url:"http://sadaftraders.com/st/products_upload/"+value.name+"/"+value.urdu_name+"/"+value.packing+"/"+value.lot+"/"+value.category_id,
+                                    success:function(response){
+                                        console.log(response);
+                                        //location.href = '../products';
+                                    },
+                                });
+                            });
+                        
+
+         
+
+                //console.log(data);
+                //var balance = jQuery.parseJSON(data);
+                //alert(balance);
+                //var length = 'New Products ( '+data.length+' )';
+                //$('#remaining_product').text(length);
+            })
+            .fail(function() {
+               // alert("error");
+            });
+
+
+    }
+        
         $(function(){
-        $(".order-list tbody tr td ").on("click input keypress keydown","button,input,textarea,select",function(e){
+    $(".order-list tbody tr td ").on("click input keypress keydown","button,input,textarea,select",function(e){
 
            
         if(e.which==37){
@@ -346,7 +398,7 @@
 
     $("ul#voucher").siblings('a').attr('aria-expanded','true');
     $("ul#voucher").addClass("show");
-    $("ul#voucher #customer-voucher-menu").addClass("active");
+    $("ul#voucher #sale-voucher-menu").addClass("active");
 
 $("#payment").hide();
 $(".card-element").hide();
@@ -399,7 +451,7 @@ $('select[name="customer_id"]').on('change', function() {
                 header:{
                 'X-CSRF-TOKEN':$('meta[name="csrf-token"]').attr('content')
                 },
-                url:"http://localhost/cd/pos/sales/"+id+"/total_balance",
+                url:"http://sadaftraders.com/st/sales/"+id+"/total_balance",
             })
             .done(function(data) {
                 //var balance = jQuery.parseJSON(data);
@@ -640,7 +692,7 @@ function keyAddw(e){
     if(e.which==13){
         counter++;
         addRow(counter)
-        $('#customer_idd-'+counter).focus();
+        $('#urdu_name'+counter).focus();
     }
 }
 
@@ -659,75 +711,18 @@ function addRow(counter){
 
     var newRow = $("<tr>");
     var cols = "";
-    cols += '<td><input  style="width:100px !important;"  class="arrow-togglable form-control customer_idd" name="customer_idd[]" id="customer_idd-'+ counter +'"/></td>';
-    cols += '<td><input  style="width:350px !important;"  class="arrow-togglable form-control product-id" name="customer_id[]" id="demo-'+ counter +'"/></td>';
+    cols += '<td><input  style="width:250px !important;"  class="arrow-togglable form-control product-id" name="customer_id[]" id="demo-'+ counter +'"/></td>';
     cols += '<td><input oninput="myinput(this.id,this.name)" readonly class="arrow-togglable form-control lot' + counter + '" type="text" id="' + counter + '" name="lot[]"/></td>';
     cols += '<td><input oninput="myinput(this.id,this.name)" readonly class="arrow-togglable form-control packing' + counter + '" type="text" id="' + counter + '" name="packing[]"/></td>';
     cols += '<td><input  oninput="myinput(this.id,this.alt)" alt="qty" class="arrow-togglable form-control qty' + counter + '" type="number" id="'+ counter +'" name="qty[]"/></td>';
-    
+    cols += '<td><span class="t_weight' + counter + '"> </span> </td>';
     cols += '<td><input  oninput="myinput(this.id,this.alt)" alt="add" class="arrow-togglable form-control add_w' + counter + '" onkeydown="keyAddw(event)" type="text" id="' + counter + '" name="note[]"/></td>';
+    cols += '<td><select name="action[]"><option value="credit">Credit</option><option value="debit">Debit</option></select></td>';
     cols += '<td><a style="color:#fff; font-weight:bold;" class="btn btn-danger deleteRow form-control"> X </a></td>';
     newRow.append(cols);
     $("table.order-list").append(newRow);
     
-          
-
-    $('#demo-'+counter).inputpicker({
-       data:[ <?php $__currentLoopData = $lims_products_list; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $product): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                        {value:"<?php echo e($product->id); ?>",text:"<?php echo e($product->name); ?>",urdu:"<?php echo e($product->city); ?>"},
-                     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                ],
-                fields:[
-                     {name:'value',text:'ID'},
-                     {name:'text',text:'Name'},
-                     {name:'urdu',text:'City'}
-                 ],
-                headShow: true,
-                fieldText : 'text',
-                fieldValue: 'value',
-                filterOpen: true
-                
-                
-        });
-    
-    
-    
-       $('#demo-'+counter).change(function(){
-        
-            $('.packing'+counter).focus();
-            var id = $(this).val();
-            $.ajax( {
-                type:'GET',
-                header:{
-                'X-CSRF-TOKEN':$('meta[name="csrf-token"]').attr('content')
-                },
-                url:"http://localhost/cd/pos/customer/"+id+"/customer/balance",
-                
-            })
-            .done(function(data) {
-                var product = jQuery.parseJSON(data);
-                $('#price'+counter).val(product.price);
-                $('#urdu_name'+counter).val(product.urdu_name);
-                $('.lot'+counter).val(product.city);
-                $('.packing'+counter).val(product.balance);
-                $('.qty'+counter).val();
-                $('#discount'+counter).val();
-                $('#sub_total'+counter).val(product.price);
-                $('#product_id'+counter).val(product.id);
-                $('#code'+counter).val(product.code);
-                $('#sale_unit'+counter).val(product.sale_unit);
-                sessionStorage.setItem("product_id", product.id);
-            })
-            .fail(function() {
-                alert("error");
-            });
-        }); 
-    
-
-
 }
-
-
 
 function calculateGrandTotal() {
 
@@ -789,7 +784,7 @@ $(document).ready(function(){
                 header:{
                 'X-CSRF-TOKEN':$('meta[name="csrf-token"]').attr('content')
                 },
-                url:"http://localhost/cd/pos/customer/"+id+"/customer/balance",
+                url:"http://sadaftraders.com/st/sales/"+id+"/customer/balance",
             })
             .done(function(data) {
                 var product = jQuery.parseJSON(data);
@@ -797,7 +792,6 @@ $(document).ready(function(){
                 $('#urdu_name1').val(product.urdu_name);
                 $('.lot1').val(product.city);
                 $('.packing1').val(product.balance);
-                $('#customer_idd-1').val(product.id);
                 $('.qty1').val();
                 $('#discount1').val();
                 $('#sub_total1').val(product.price);
@@ -907,7 +901,7 @@ function test(id){
         header:{
         'X-CSRF-TOKEN':$('meta[name="csrf-token"]').attr('content')
         },
-        url:"http://localhost/cd/pos/sales/"+option_id,
+        url:"http://sadaftraders.com/st/sales/"+option_id,
     })
     .done(function(data) {
         var product = jQuery.parseJSON(data);
@@ -929,25 +923,6 @@ function test(id){
     
 
 }
-
-            $('#demo-1').inputpicker({
-                data:[ <?php $__currentLoopData = $lims_products_list; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $product): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                        {value:"<?php echo e($product->id); ?>",text:"<?php echo e($product->name); ?>",urdu:"<?php echo e($product->city); ?>"},
-                     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                ],
-                fields:[
-                     {name:'value',text:'Id'},
-                     {name:'text',text:'Name'},
-                     {name:'urdu',text:'City'}
-                     
-                 ],
-                headShow: true,
-                fieldText : 'text',
-                fieldValue: 'value',
-                filterOpen: true
-                
-             });
-             
 
 
 $('#inputform').keydown(function(event) {

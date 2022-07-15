@@ -360,9 +360,7 @@ class VoucherController extends Controller
     }
     
     public function expense_receiving_voucher(){
-         $lims_account_list = \App\Account::where('is_active', true)->where('customer_id', NULL)->get();
-            $lims_user_list = \App\User::where('is_active', true)->get();
-            //$payment = Payment::orderBy('created_at', 'desc')->get();
+         
             
             $payment = Payment::all();
 
@@ -370,64 +368,48 @@ class VoucherController extends Controller
             $receive_voucher_payment_list = Payment::all();
             //$credit_list = Payment::whereNotNull('credit')->where('account_id', $data['account_id'])->whereDate('created_at', '>=' , $data['start_date'])->whereDate('created_at', '<=' , $data['end_date'])->get();
             //$credit_list = Payment::whereNotNull('credit')->get();
-            $lims_products_list = Account::where('type', 'Expense')->orderBy('name', 'ASC')->get();
+            $lims_products_list = Account::where('account_type', 'expense')->orderBy('name', 'ASC')->get();
             $expense_vouchers = DB::table('expense_vouchers')
                 ->orderBy('id', 'ASC')
                 ->get();
             $balance = 0;
-            return view('voucher.expense_receiving_voucher', compact('lims_account_list','receive_voucher_payment_list', 'expense_vouchers', 'lims_products_list', 'payment','balance'));
+            return view('voucher.expense_receiving_voucher', compact('receive_voucher_payment_list', 'expense_vouchers', 'lims_products_list', 'payment','balance'));
         
     }
     public function expense_payment_voucher(){
         
-        $lims_account_list = \App\Account::where('is_active', true)->where('customer_id', NULL)->get();
-        $lims_user_list = \App\User::where('is_active', true)->get();
-        //$payment = Payment::orderBy('created_at', 'desc')->get();
-            
             $payment = Payment::all();
 
             
             $receive_voucher_payment_list = Payment::all();
             
-            $lims_products_list = Account::where('type', 'Expense')->orderBy('name', 'ASC')->get();
+            $lims_products_list = Account::where('account_type', 'expense')->orderBy('name', 'ASC')->get();
             $expense_vouchers = DB::table('expense_vouchers')
                 ->orderBy('id', 'ASC')
                 ->get();
             $balance = 0;
-            return view('voucher.expense_payment_voucher', compact('lims_account_list','receive_voucher_payment_list', 'expense_vouchers', 'lims_products_list', 'lims_user_list','payment','balance'));
+            return view('voucher.expense_payment_voucher', compact('receive_voucher_payment_list', 'expense_vouchers', 'lims_products_list', 'payment','balance'));
         
     }
     
     public function bank_receiving_voucher(){
-        $lims_account_list = \App\Account::where('is_active', true)->where('customer_id', NULL)->get();
-            $lims_user_list = \App\User::where('is_active', true)->get();
-            //$payment = Payment::orderBy('created_at', 'desc')->get();
-            
+        
             $payment = Payment::all();
-
-            //$debit_list = Payment::whereNotNull('debit')->where('account_id', $data['account_id'])->whereDate('created_at', '>=' , $data['start_date'])->whereDate('created_at', '<=' , $data['end_date'])->get();
             $receive_voucher_payment_list = Payment::all();
-            //$credit_list = Payment::whereNotNull('credit')->where('account_id', $data['account_id'])->whereDate('created_at', '>=' , $data['start_date'])->whereDate('created_at', '<=' , $data['end_date'])->get();
-            //$credit_list = Payment::whereNotNull('credit')->get();
-            $lims_products_list = Account::where('type', 'Bank')->orderBy('name', 'ASC')->get();
+            $lims_products_list = Account::where('account_type', 'bank')->orderBy('name', 'ASC')->get();
             $balance = 0;
-            return view('voucher.bank_receive_voucher', compact('lims_account_list','receive_voucher_payment_list', 'lims_products_list', 'lims_user_list','payment','balance'));
+            return view('voucher.bank_receive_voucher', compact('receive_voucher_payment_list', 'lims_products_list','payment','balance'));
         
     }
     public function bank_payment_voucher(){
-        $lims_account_list = \App\Account::where('is_active', true)->where('customer_id', NULL)->get();
-            $lims_user_list = \App\User::where('is_active', true)->get();
-            //$payment = Payment::orderBy('created_at', 'desc')->get();
             
             $payment = Payment::all();
 
-            //$debit_list = Payment::whereNotNull('debit')->where('account_id', $data['account_id'])->whereDate('created_at', '>=' , $data['start_date'])->whereDate('created_at', '<=' , $data['end_date'])->get();
             $receive_voucher_payment_list = Payment::all();
-            //$credit_list = Payment::whereNotNull('credit')->where('account_id', $data['account_id'])->whereDate('created_at', '>=' , $data['start_date'])->whereDate('created_at', '<=' , $data['end_date'])->get();
-            //$credit_list = Payment::whereNotNull('credit')->get();
-            $lims_products_list = Account::where('type', 'Bank')->orderBy('name', 'ASC')->get();
+            
+            $lims_products_list = Account::where('account_type', 'bank')->orderBy('name', 'ASC')->get();
             $balance = 0;
-            return view('voucher.bank_payment_voucher', compact('lims_account_list','receive_voucher_payment_list', 'lims_products_list', 'lims_user_list','payment','balance'));
+            return view('voucher.bank_payment_voucher', compact('receive_voucher_payment_list', 'lims_products_list', 'payment','balance'));
         
     }
     

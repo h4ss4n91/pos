@@ -795,6 +795,7 @@ $(document).ready(function(){
                 $('#urdu_name1').val(product.urdu_name);
                 $('.lot1').val(product.city);
                 $('.packing1').val(product.balance);
+                $('#customer_idd-1').val(product.id);
                 $('.qty1').val();
                 $('#discount1').val();
                 $('#sub_total1').val(product.price);

@@ -123,31 +123,7 @@
                                     </table>
                                 </div>
                         </td>
-                        <td valign="TOP" style="width:38% !important">
-                            <h1>Total Receivings : <span style="font-weight:bold; color:red; font-size:26px;" id="total_receiving"> </span>  <br/>and Remaining Bill Payments</h1>
-                            <hr/>
-                             <table style="border:4px solid #000; width:100%;" border='1' id='userTable_two' style='border-collapse: collapse;'>
-                                   <thead>
-                                    <tr>
-                                      <th style="font-size:21px;">S.No</th>
-                                      <th style="width:150px; font-size:21px;">Date</th>
-                                      <th style="font-size:21px;">Description</th>
-                                      <th style="font-size:21px;">Debit</th>
-                                      <th style="font-size:21px;">Balance</th>
-                                    </tr>
-                                   </thead>
-                                   <tbody></tbody>
-                                   <tfoot>
-                                    <tr>
-                                      <th style="font-size:21px;"></th>
-                                      <th style="width:150px; font-size:21px;"></th>
-                                      <th style="font-size:21px;"></th>
-                                      <th style="font-size:21px;"></th>
-                                      <th style="font-size:21px;"></th>
-                                    </tr>
-                                   </tfoot>
-                                </table>
-                        </td>
+                        
                     </tr>
                     
                 </table>
@@ -183,7 +159,7 @@ $('select[name="account_id"]').on('change', function() {
                 header:{
                 'X-CSRF-TOKEN':$('meta[name="csrf-token"]').attr('content')
                 },
-                url:"http://localhost/cd/pos/sales/"+id+"/customer_balance",
+                url:"http://localhost/cd/pos/sales/"+id+"/expense_balance",
             })
             .done(function(data) {
                 //var balance = jQuery.parseJSON(data);

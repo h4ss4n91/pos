@@ -1,13 +1,13 @@
-@extends('layout.main') @section('content')
-@if(session()->has('message'))
-  <div class="alert alert-success alert-dismissible text-center"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>{!! session()->get('message') !!}</div> 
-@endif
-@if(session()->has('not_permitted'))
-  <div class="alert alert-danger alert-dismissible text-center"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>{{ session()->get('not_permitted') }}</div> 
-@endif
+ <?php $__env->startSection('content'); ?>
+<?php if(session()->has('message')): ?>
+  <div class="alert alert-success alert-dismissible text-center"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><?php echo session()->get('message'); ?></div> 
+<?php endif; ?>
+<?php if(session()->has('not_permitted')): ?>
+  <div class="alert alert-danger alert-dismissible text-center"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><?php echo e(session()->get('not_permitted')); ?></div> 
+<?php endif; ?>
 <h1 style="background:#02b4ac; padding:10px; text-align:center; color:#fff;"> G E N E R A L &nbsp; &nbsp;  J O U R N A L  </h1>
 
-    <link href="{{asset('public/src/jquery.inputpicker.css')}}" rel="stylesheet" type="text/css">
+    <link href="<?php echo e(asset('public/src/jquery.inputpicker.css')); ?>" rel="stylesheet" type="text/css">
 
     <!-- Bootstrap DatePicker -->
     
@@ -17,7 +17,7 @@
 
         $(function () {
             $('#txtDate').datepicker({
-                format: "dd-mm-yyyy"r
+                format: "dd-mm-yyyy"
             });
         });
 
@@ -144,144 +144,27 @@ section p{font-family:'Lato', sans-serif;}
 <section>
 
     <div class="container-fluid">
-       @if (session('success'))
+       <?php if(session('success')): ?>
         <div class="alert alert-success">
-        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a> {{ session('success') }}
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a> <?php echo e(session('success')); ?>
+
         </div>
-    @endif
+    <?php endif; ?>
             <table style="width:100%;">
                 <tr>
                     <td>
-                            <form method="POST" action="{{url('general_journal23')}}">
-                                @csrf
-                                <input name="sale_date" type="date" class="arrow-togglable date-input" value="@php echo date('d-m-Y');@endphp"/>
+                            <form method="POST" action="<?php echo e(url('general_journal23')); ?>">
+                                <?php echo csrf_field(); ?>
+                                <input name="sale_date" type="date" class="arrow-togglable date-input" value="<?php echo date('d-m-Y');?>"/>
                                 <input type="submit" value="Submit"/>
                             </form>
                     </td>
                 </tr>
             </table>
             
-            <!-- a href="{{route('sales.create')}}" style="border-radius:10px;" class="btn3d btn btn-info"><i class="fa fa-plus"></i> {{trans('file.Add Sale')}}</a -->
-            <hr/>
-           <style>
-              .receive_vouchers tr td{
-                  border:1px solid #000;
-                  text-align:Center;
-              } 
-           </style>
-            <table style="width:100%;" class="receive_vouchers">
-                <tr>
-                    <td colspan="2">
-                        @php
-                        $date_two = \Carbon\Carbon::createFromFormat('Y-m-d', $date)->format('d-m-Y ');
-                    @endphp
-                        Cash in Hand <br/> AT <strong> {{$date_two}}  </strong>
-                    </td>
-                    
-                    <td colspan="2">
-                        Receive Vouchers 
-                    </td>
-                    <td colspan="2">
-                        Payment Vouchers 
-                    </td>
-                    <td colspan="2">
-                        Expenses Vouchers 
-                    </td>
-                    <td colspan="2">
-                        Bank Vouchers 
-                    </td>
-                    <td colspan="2">
-                        Cash in Hand <br/> for Next Day
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        Debit
-                    </td>
-                    <td>
-                        Credit
-                    </td>
-                    <td>
-                        Debit <br/>
-                        (MINUS) (PAYMENTS)<br/>
-                    </td>
-                    <td>
-                        Credit (DEFAULT)
-                         <br/>
-                        (PLUS) (RECEIVINGS)<br/>
-                    </td>
-                    <td>
-                        Debit (DEFAULT)<br/>
-                        (MINUS) (Payments)
-                    </td>
-                    <td>
-                        Credit <br/>
-                        (PLUS) (Receivings)
-                    </td>
-                    <td>
-                        Debit (DEFAULT) <br/>
-                        (MINUS) (Payments)
-                    </td>
-                    <td>
-                        Credit
-                        (PLUS) (Receivings)
-                    </td>
-                    <td>
-                        Debit <br/>
-                        ( MINUS ) (Payments)
-                    </td>
-                    <td>
-                        Credit (DEFAULT)<br/>
-                        ( PLUS ) (Receivings)
-                    </td>
-                    <td>Debit</td>
-                    <td>Credit</td>
-                </tr>
-                <tr>
-                    <td>
-                        0
-                    </td>
-                    <td>
-                        {{$cashInHand}}
-                    </td>
-                    <td>
-                        {{$receive_vouchers_debit}}
-                    </td>
-                    <td>
-                        {{$receive_vouchers}}
-                    </td>
-                    <td>
-                        {{$payment_vouchers_debit}}
-                    </td>
-                    <td>
-                        {{$payment_vouchers}}
-                    </td>
-                    <td>
-                        {{$expense_vouchers_debit}}
-                    </td>
-                    <td>
-                        {{$expense_vouchers}}
-                    </td>
-                    <td>
-                        {{$bank_vouchers_debit}}
-                    </td>
-                    <td>
-                        {{$bank_vouchers}}
-                    </td>
-                    <td>
-                        0
-                    </td>
-                    <td>
-                        {{$cashInHand + $receive_vouchers - $receive_vouchers_debit + $payment_vouchers - $payment_vouchers_debit  - $expense_vouchers_debit + $expense_vouchers + $bank_vouchers - $bank_vouchers_debit}}
-                        @php
-                            $total = $cashInHand + $receive_vouchers - $receive_vouchers_debit + $payment_vouchers - $payment_vouchers_debit  - $expense_vouchers_debit + $expense_vouchers + $bank_vouchers - $bank_vouchers_debit;
-                        @endphp
-                    </td>
-                </tr>
-                
-                
-            </table>
-            <!-- table>
+            <!-- a href="<?php echo e(route('sales.create')); ?>" style="border-radius:10px;" class="btn3d btn btn-info"><i class="fa fa-plus"></i> <?php echo e(trans('file.Add Sale')); ?></a -->
+            
+            <table>
                 
                 <tr>
                     <td>
@@ -293,17 +176,13 @@ section p{font-family:'Lato', sans-serif;}
                     <td>
                         Amount
                     </td>
-                    
                 </tr>
                 <tr>
                     <td colspan="2">
-                        Cash in hand (CREDIT) at {{$date}} 
+            Cash in hand (CREDIT) at <?php echo e($date); ?> 
             
                     </td>
                     <td>
-                        
-                            {{$cashInHand}}            
-                        
             
                     </td>
                     
@@ -315,7 +194,8 @@ section p{font-family:'Lato', sans-serif;}
                          (PLUS) (Receivings)
                     </td>
                     <td>
-                        
+                        <?php echo e($receive_vouchers); ?>
+
                     </td>
                 </tr>
                 
@@ -327,7 +207,8 @@ section p{font-family:'Lato', sans-serif;}
                          (MINUS) (Payments)
                     </td>
                     <td>
-                        {{$receive_vouchers_debit}}
+                        <?php echo e($receive_vouchers_debit); ?>
+
                     </td>
                 </tr>
                 
@@ -339,7 +220,8 @@ section p{font-family:'Lato', sans-serif;}
                          (PLUS) (Receivings)
                     </td>
                     <td>
-                        {{$payment_vouchers}}
+                        <?php echo e($payment_vouchers); ?>
+
                     </td>
                 </tr>
                 
@@ -351,7 +233,8 @@ section p{font-family:'Lato', sans-serif;}
                          (MINUS) (Payments)
                     </td>
                     <td>
-                        {{$payment_vouchers_debit}}
+                        <?php echo e($payment_vouchers_debit); ?>
+
                     </td>
                 </tr>
                 
@@ -363,7 +246,8 @@ section p{font-family:'Lato', sans-serif;}
                          (PLUS) (Receivings)
                     </td>
                     <td>
-                         {{$expense_vouchers}}
+                         <?php echo e($expense_vouchers); ?>
+
                     </td>
                 </tr>
                 
@@ -375,7 +259,8 @@ section p{font-family:'Lato', sans-serif;}
                          (Minus) (Payments)
                     </td>
                     <td>
-                        {{$expense_vouchers_debit}}
+                        <?php echo e($expense_vouchers_debit); ?>
+
                     </td>
                 </tr>
                 
@@ -387,7 +272,8 @@ section p{font-family:'Lato', sans-serif;}
                         ( PLUS ) (Receivings)
                     </td>
                     <td>
-                        {{$bank_vouchers}}
+                        <?php echo e($bank_vouchers); ?>
+
                     </td>
                 </tr>
                 
@@ -399,32 +285,32 @@ section p{font-family:'Lato', sans-serif;}
                         ( MINUS ) (Payments)
                     </td>
                     <td>
-                        {{$bank_vouchers_debit}}
+                        <?php echo e($bank_vouchers_debit); ?>
+
                     </td>
                 </tr>
                 <tr>
                     <td colspan="2">
-                              CASH IN HAND  (CREDIT) for NEXT DAY = 
+            CASH IN HAND  (CREDIT) for NEXT DAY = 
+            
                     </td>
                     <td>
-                        {{$cashInHand + $receive_vouchers - $receive_vouchers_debit + $payment_vouchers - $payment_vouchers_debit  - $expense_vouchers_debit + $expense_vouchers + $bank_vouchers - $bank_vouchers_debit}}                        
+            
                     </td>
                 </tr>
-            </table -->
+            </table>
             
             
             <a style="border-radius:10px;" class="btn3d btn btn-default">
                  <span style="border-bottom:1px solid #000;">Date: <span style="border-bottom:1px solid #000; font-size:21px; font-weight:bold;">
-                    
-                    {{$date_two}}
+                      <?php echo e($date); ?>
+
                 </span></span></a>&nbsp;
                  
             <a style="border-radius:10px;" class="btn3d btn btn-default">
-                 <span style="border-bottom:1px solid #000;">Total Receivings: <span style="border-bottom:1px solid #000; font-size:21px; font-weight:bold;"> {{$cashInHand + $receive_vouchers + $payment_vouchers + $expense_vouchers + $bank_vouchers}} </span></span></a>&nbsp;
+                 <span style="border-bottom:1px solid #000;">Total Receivings: <span style="border-bottom:1px solid #000; font-size:21px; font-weight:bold;">  </span></span></a>&nbsp;
             <a style="border-radius:10px;" class="btn3d btn btn-default"> 
             <span style="border-bottom:1px solid #000;">Total Payments: <span style="border-bottom:1px solid #000; font-size:21px; font-weight:bold;"> 
-            
-            {{$receive_vouchers_debit + $payment_vouchers_debit + $expense_vouchers_debit + $bank_vouchers_debit}}
             
             </span></span>
             
@@ -433,38 +319,6 @@ section p{font-family:'Lato', sans-serif;}
 
             <a style="border-radius:10px;" class="btn3d btn btn-default"> 
             <span style="border-bottom:1px solid #000;">Cash in Hand: <span style="border-bottom:1px solid #000; font-size:21px; font-weight:bold;">
-                
-                 {{$cashInHand + $receive_vouchers - $receive_vouchers_debit + $payment_vouchers - $payment_vouchers_debit  - $expense_vouchers_debit + $expense_vouchers + $bank_vouchers - $bank_vouchers_debit}} </span></span>
-                
-            </a>&nbsp;
-            
-            <hr/>
-            
-            <a style="border-radius:10px;" class="btn3d btn btn-default"> 
-            <span style="border-bottom:1px solid #000;">Receivings in ROZNAMCHA: <span style="border-bottom:1px solid #000; font-size:21px; font-weight:bold;">
-                
-                 {{$cashInHand + $receive_vouchers + $payment_vouchers +  $bank_vouchers}}
-                 @php
-                    $receivingInRoznamcha = $cashInHand + $receive_vouchers + $payment_vouchers +  $bank_vouchers;
-                 @endphp
-                 </span></span>
-                
-            </a>&nbsp;
-            
-            <a style="border-radius:10px;" class="btn3d btn btn-default"> 
-            <span style="border-bottom:1px solid #000;">Payments in ROZNAMCHA: <span style="border-bottom:1px solid #000; font-size:21px; font-weight:bold;">
-                
-                 {{$receive_vouchers_debit + $bank_vouchers_debit +  $payment_vouchers_debit + $expense_vouchers_debit + $total}} </span></span>
-                 @php
-                    $paymentsInRoznamcha = $receive_vouchers_debit + $bank_vouchers_debit +  $payment_vouchers_debit + $expense_vouchers_debit + $total
-                 @endphp
-                
-            </a>&nbsp;
-            
-            <a style="border-radius:10px;" class="btn3d btn btn-default"> 
-            <span style="border-bottom:1px solid #000;">Cash Short in ROZNAMCHA: <span style="border-bottom:1px solid #000; font-size:21px; font-weight:bold;">
-                
-                 {{$receivingInRoznamcha - $paymentsInRoznamcha}} </span></span>
                 
             </a>&nbsp;
 
@@ -479,11 +333,13 @@ section p{font-family:'Lato', sans-serif;}
 
 <!--home-content-top starts from here-->
 
-       <div style="padding:30px; " class="tabbable-line">
+  <div class="container">
+    <div class="tabbable-panel margin-tops4 ">
+      <div class="tabbable-line">
         <ul class="nav nav-tabs tabtop  tabsetting">
           <li class="active"> <a href="#tab_default_1" data-toggle="tab"> Receive Vouchers </a> </li>
           <li> <a href="#tab_default_2" data-toggle="tab"> Payment Vouchers</a> </li>
-          <li> <a href="#tab_default_3" data-toggle="tab"> Expense Vouchers </a> </li>
+          <li> <a href="#tab_default_3" data-toggle="tab"> Expene Vouchers </a> </li>
           <li> <a href="#tab_default_4" data-toggle="tab"> Bank Vouchers</a> </li>
         </ul>
         <div class="tab-content margin-tops">
@@ -493,48 +349,37 @@ section p{font-family:'Lato', sans-serif;}
                 <h2>Receive Vouchers</h2>
                 
                 <div class="table-responsive">
-                        <table style="color:#000; font-size:23px !important;" id="example" class="table table-striped table-bordered" style="width:100%">
+                        <table id="example" class="table table-striped table-bordered" style="width:100%">
                             <thead>
                                 <tr>
                                     <th>Date</th>
                                     <th>Customer</th>
                                     <th>Amount</th>
                                     <th>Dr / Cr</th>
-                                    <th>Balance</th>
-                                    <th>Note</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @php $balance = $cashInHand; @endphp
-                                    @foreach($receive_vouchers_list as $row_rvl)
+                                    <?php $__currentLoopData = $receive_vouchers_list; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $row_rvl): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                         <tr>
                                                 <td>
-                                                    @php
+                                                    <?php
                                                         $newDate = \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $row_rvl->receive_voucher_date)->format('d-m-Y ');
-                                                    @endphp
-                                                    {{$newDate}}
+                                                    ?>
+                                                    <?php echo e($newDate); ?>
+
                                                 </td>
                                                 <td>
-                                                    @php 
+                                                    <?php 
                                                         $customer_name = DB::table('customers')->where('id', $row_rvl->customer_id)->get(); 
-                                                    @endphp
-                                                    @if(!$customer_name->isEmpty())
-                                                        @php
                                                         echo $customer_name[0]->name.' ('.$customer_name[0]->city.') ';
-                                                        @endphp
-                                                    @endif
+                                                    ?>
                                                 </td>
-                                                <td>{{$row_rvl->amount}}</td>
-                                                <td>{{$row_rvl->action}}</td>
-                                                <td>
-                                                    @php $balance = $row_rvl->amount + $balance; @endphp
-                                                    {{$balance}}
-                                                </td>
-                                                <td>{{$row_rvl->note}}</td>
-                                                <td> <a target="_blank" href="{{url('customer-receiving-voucher-edit',$row_rvl->id)}}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a> | <a onclick="return confirm('Are you sure? You want to Delete')" href="{{url('receive-voucher/'.$row_rvl->id.'/receive_voucher_delete')}}"><i class="fa fa-trash" aria-hidden="true"></i> </a> | <a onclick="someFunction({{$row_rvl->id}})"><i class="fa fa-check" aria-hidden="true"></i></a> </td>
+                                                <td><?php echo e($row_rvl->amount); ?></td>
+                                                <td><?php echo e($row_rvl->action); ?></td>
+                                                <td>Edit | Delete</td>
                                         </tr>
-                                    @endforeach
+                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             </tfoot>
                         </table>
                 </div>
@@ -543,13 +388,13 @@ section p{font-family:'Lato', sans-serif;}
                 
              </div>
           </div>
-          <div class="tab-pane fade" class="active show" id="tab_default_2">
+          <div class="tab-pane fade" id="tab_default_2">
             
             <div class="col-md-12">
-              <h2>Payment Vouchers</h2>
+              <h2 class="heading4">Payment Vouchers</h2>
               
                <div class="table-responsive">
-                        <table style="color:#000; font-size:23px !important;" id="example" class="table table-striped table-bordered" style="width:100%">
+                        <table id="example" class="table table-striped table-bordered" style="width:100%">
                             <thead>
                                 <tr>
                                     <th>Date</th>
@@ -561,101 +406,31 @@ section p{font-family:'Lato', sans-serif;}
                             </thead>
                             <tbody>
                                 
-                                    @foreach($payment_vouchers_list as $row_rvl)
+                                    <?php $__currentLoopData = $payment_vouchers_list; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $row_rvl): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                         <tr>
                                             
                                                 <td>
                                                     
-                                                    @php
+                                                    <?php
                                                         $newDate = \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $row_rvl->receive_voucher_date)->format('d-m-Y ');
-                                                    @endphp
-                                                    {{$newDate}}
+                                                    ?>
+                                                    <?php echo e($newDate); ?>
+
                                                 </td>
                                                 <td>
-                                                    @php 
+                                                    <?php 
                                                         $supplier_name = DB::table('suppliers')->where('id', $row_rvl->supplier_id)->get(); 
+                                                        echo $supplier_name[0]->name.' ('.$supplier_name[0]->city.') ';
                                                         
-                                                    @endphp
-                                                    @if(!$supplier_name->isEmpty())
-                                                        @php
-                                                            echo $supplier_name[0]->name.' ('.$supplier_name[0]->city.') ';
-                                                        @endphp
-                                                    @endif
+                                                    ?>
                                                 </td>
 
-                                                <td>{{$row_rvl->amount}}</td>
-                                                <td>{{$row_rvl->action}}</td>
-                                                <td> <a href="" data-toggle="modal" data-target="#payment_voucherModal{{$row_rvl->id}}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a> | <a onclick="return confirm('Are you sure? You want to Delete')"  href="{{url('receive-voucher/'.$row_rvl->id.'/payment_voucher_delete')}}"><i class="fa fa-trash" aria-hidden="true"></i> </a></td>
+                                                <td><?php echo e($row_rvl->amount); ?></td>
+                                                <td><?php echo e($row_rvl->action); ?></td>
+                                                <td>Edit | Delete</td>
                                           
                                         </tr>
-                                        
-                                        <!-- Modal -->
-                                                <div id="payment_voucherModal{{$row_rvl->id}}" class="modal fade" role="dialog">
-                                                  <div class="modal-dialog">
-                                                    <!-- Modal content-->
-                                                    <div class="modal-content">
-                                                      <div class="modal-header">
-                                                        <h4 class="modal-title">Payment Voucher</h4>
-                                                      </div>
-                                                      <div class="modal-body">
-                                                        <form action="{{url('receive-voucher/666/general_journal_edit_payment_voucher')}}" method="POST">
-                                                            @csrf
-                                                            <input type="hidden" name="id" value="{{$row_rvl->id}}"/>
-                                                            <div class="form-group">
-                                                              <label for="exampleInputPassword1">Date: {{$newDate}}</label>
-                                                            <input type="date" class="form-control" value="{{$newDate}}" placeholder="{{$newDate}}" name="date">
-                                                          </div>
-                                                          <div class="form-group">
-                                                            <label for="exampleInputEmail1">Party Name : 
-                                                            @if(!$supplier_name->isEmpty())
-                                                                @php echo $supplier_name[0]->name.' ('.$supplier_name[0]->city.') '; @endphp</label>
-                                                            @endif
-                                                            @php
-                                                                $products = DB::table('suppliers')->get();
-                                                            @endphp
-                                                                    <select class="form-control" data-live-search="true" data-live-search-style="begins" title="Select customer..." name="customer_id">
-                                                                        @if(!$supplier_name->isEmpty())
-                                                                            <option value="{{$supplier_name[0]->id}}" selected="selected" >{{$supplier_name[0]->name}} &nbsp; ({{$supplier_name[0]->city}})</option>
-                                                                        @endif
-                                                                        
-                                                                    </select>
-                                                                    
-                                                          </div>
-                                                          <div class="form-group">
-                                                            <label for="exampleInputPassword1">Amount</label>
-                                                            <input type="text" class="form-control" name="amount" value="{{$row_rvl->amount}}">
-                                                          </div>
-                                                          <div class="form-group">
-                                                            <label for="exampleInputPassword1">Note</label>
-                                                            <input type="text" class="form-control" name="note" value="{{$row_rvl->note}}" >
-                                                          </div>
-                                                          <div class="form-group">
-                                                            <label for="exampleInputPassword1">Debit / Credit : {{$row_rvl->action}}</label>
-                                                                <select class="form-control" name="action">
-                                                                    @if($row_rvl->action == "debit")
-                                                                        <option value="debit"> Debit </option>
-                                                                    @else
-                                                                        <option value="credit"> Credit </option>
-                                                                    @endif
-                                                                    <option value="debit"> Debit </option>
-                                                                    <option value="credit"> Credit </option>
-                                                                </select>
-                                                          </div>
-                                                          
-                                                          <button type="submit" class="btn btn-primary">Submit</button>
-                                                        </form>
-                                                      </div>
-                                                      <div class="modal-footer">
-                                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                                      </div>
-                                                    </div>
-                                                
-                                                  </div>
-                                                </div>
-                                            <!-- Modal -->
-                                
-                                
-                                    @endforeach
+                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             </tfoot>
                         </table>
                 </div>
@@ -667,106 +442,37 @@ section p{font-family:'Lato', sans-serif;}
           <div class="tab-pane fade" id="tab_default_3">
             
             <div class="col-md-12">
-            <h2>Expense Vouchers</h2>
+            
             <div class="table-responsive">
-                        <table style="color:#000; font-size:23px !important;" id="example" class="table table-striped table-bordered" style="width:100%">
+                        <table id="example" class="table table-striped table-bordered" style="width:100%">
                             <thead>
                                 <tr>
                                     <th>Date</th>
                                     <th>Expense Account</th>
                                     <th>Amount</th>
                                     <th>Dr / Cr</th>
-                                    <th>Note</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 
-                                    @foreach($expense_vouchers_list as $row_rvl)
+                                    <?php $__currentLoopData = $expense_vouchers_list; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $row_rvl): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                         <tr>
                                             
-                                                <td> 
-                                                    @php
-                                                        $expense_voucher_date = \Carbon\Carbon::createFromFormat('Y-m-d', $row_rvl->receive_voucher_date)->format('d-m-Y ');
-                                                    @endphp
-                                                
-                                                    {{$expense_voucher_date}}
-                                                    
-                                                </td>
+                                                <td> <?php echo e($newDate); ?> </td>
                                                 <td>
-                                                    @php 
-                                                        $expenses = DB::table('accounts')->where('id', $row_rvl->expense_id)->where('account_type', 'expense')->get(); 
+                                                    <?php 
+                                                        $expenses = DB::table('accounts')->where('id', $row_rvl->expense_id)->where('type', 'Expense')->get(); 
                                                         echo $expenses[0]->name;
                                                         
-                                                    @endphp
+                                                    ?>
                                                 </td>
-                                                <td>{{$row_rvl->amount}}</td>
-                                                <td>{{$row_rvl->note}}</td>
-                                                <td>{{$row_rvl->action}}</td>
-                                                <td> <a href="" data-toggle="modal" data-target="#expense_voucherModal{{$row_rvl->id}}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a> | <a onclick="return confirm('Are you sure? You want to Delete')"  href="{{url('receive-voucher/'.$row_rvl->id.'/expense_voucher_delete')}}"><i class="fa fa-trash" aria-hidden="true"></i> </a></td>
+                                                <td><?php echo e($row_rvl->amount); ?></td>
+                                                <td><?php echo e($row_rvl->action); ?></td>
+                                                <td>Edit | Delete</td>
+                                          
                                         </tr>
-                                              <!-- Modal -->
-                                                <div id="expense_voucherModal{{$row_rvl->id}}" class="modal fade" role="dialog">
-                                                  <div class="modal-dialog">
-                                                    <!-- Modal content-->
-                                                    <div class="modal-content">
-                                                      <div class="modal-header">
-                                                        <h4 class="modal-title">Expense Voucher</h4>
-                                                      </div>
-                                                      <div class="modal-body">
-                                                        <form action="{{url('receive-voucher/666/general_journal_edit_expense_voucher')}}" method="POST">
-                                                            @csrf
-                                                            <input type="hidden" name="id" value="{{$row_rvl->id}}"/>
-                                                            <div class="form-group">
-                                                              <label for="exampleInputPassword1">Date: {{$newDate}}</label>
-                                                            <input type="date" class="form-control" value="{{$newDate}}" placeholder="{{$newDate}}" name="date" required>
-                                                          </div>
-                                                          <div class="form-group">
-                                                            <label for="exampleInputEmail1">Account Head : @php echo $expenses[0]->name; @endphp</label>
-                                                                    <select class="form-control" data-live-search="true" data-live-search-style="begins" title="Select customer..." name="customer_id">
-                                                                         <option value="{{$row_rvl->expense_id}}" selected="selected" >{{$expenses[0]->name}}</option>
-                                                                            @php 
-                                                                                $expenses_row = DB::table('accounts')->where('account_type', 'expense')->get(); 
-                                                                                echo $expenses[0]->name;
-                                                                            @endphp
-                                                                        @foreach($expenses_row as $expense)
-                                                                            <option value="{{$expense->id}}">{{$expense->name}})</option>
-                                                                        @endforeach
-                                                                    </select>
-                                                          </div>
-                                                          <div class="form-group">
-                                                            <label for="exampleInputPassword1">Amount</label>
-                                                            <input type="text" class="form-control" name="amount" value="{{$row_rvl->amount}}">
-                                                          </div>
-                                                          <div class="form-group">
-                                                            <label for="exampleInputPassword1">Note</label>
-                                                            <input type="text" class="form-control" name="note" value="{{$row_rvl->note}}" >
-                                                          </div>
-                                                          <div class="form-group">
-                                                            <label for="exampleInputPassword1">Debit / Credit : {{$row_rvl->action}}</label>
-                                                                <select class="form-control" name="action">
-                                                                    @if($row_rvl->action == "debit")
-                                                                        <option value="debit"> Debit </option>
-                                                                    @else
-                                                                        <option value="credit"> Credit </option>
-                                                                    @endif
-                                                                    <option value="debit"> Debit </option>
-                                                                    <option value="credit"> Credit </option>
-                                                                </select>
-                                                          </div>
-                                                          
-                                                          <button type="submit" class="btn btn-primary">Submit</button>
-                                                        </form>
-                                                      </div>
-                                                      <div class="modal-footer">
-                                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                                      </div>
-                                                    </div>
-                                                
-                                                  </div>
-                                                </div>
-                                            <!-- Modal -->                                   
-                                    @endforeach
+                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             </tfoot>
                         </table>
                 </div>
@@ -775,108 +481,38 @@ section p{font-family:'Lato', sans-serif;}
           <div class="tab-pane fade" id="tab_default_4">
             
             <div class="col-md-12">
-              <h2>Bank Vouchers</h2>
+              <h4 class="heading4">Bank Vouchers</h4>
               
                <div class="table-responsive">
-                        <table style="color:#000; font-size:23px !important;" id="example" class="table table-striped table-bordered" style="width:100%">
+                        <table id="example" class="table table-striped table-bordered" style="width:100%">
                             <thead>
                                 <tr>
                                     <th>Date</th>
-                                    <th>Bank Account</th>
+                                    <th>Expense Account</th>
                                     <th>Amount</th>
                                     <th>Dr / Cr</th>
-                                    <th>Note</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 
-                                    @foreach($bank_vouchers_list as $row_rvl)
+                                    <?php $__currentLoopData = $bank_vouchers_list; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $row_rvl): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                         <tr>
-                                            <td>
-                                                @php
-                                                $bank_receive_voucher_date = \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $row_rvl->receive_voucher_date)->format('d-m-Y ');
-                                                @endphp
-                                                
-                                                {{$bank_receive_voucher_date}}
-                                                </td>
+                                            
+                                                <td> <?php echo e($newDate); ?> </td>
                                                 <td>
-                                                    @php 
-                                                        $Banks = DB::table('accounts')->where('id', $row_rvl->bank_id)->where('account_type', 'bank')->get(); 
+                                                    <?php 
+                                                        $Banks = DB::table('accounts')->where('id', $row_rvl->bank_id)->where('type', 'Bank')->get(); 
                                                         echo $Banks[0]->name;
                                                         
-                                                    @endphp
+                                                    ?>
                                                 </td>
-                                                <td>{{$row_rvl->amount}}</td>
-                                                <td>{{$row_rvl->action}}</td>
-                                                <td>{{$row_rvl->note}}</td>
-                                                <td> <a href="" data-toggle="modal" data-target="#bank_voucherModal{{$row_rvl->id}}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a> | <a onclick="return confirm('Are you sure? You want to Delete')"  href="{{url('receive-voucher/'.$row_rvl->id.'/bank_voucher_delete')}}"><i class="fa fa-trash" aria-hidden="true"></i> </a></td>
+                                                <td><?php echo e($row_rvl->amount); ?></td>
+                                                <td><?php echo e($row_rvl->action); ?></td>
+                                                <td>Edit | Delete</td>
+                                          
                                         </tr>
-                                                <!-- Modal -->
-                                                <div id="bank_voucherModal{{$row_rvl->id}}" class="modal fade" role="dialog">
-                                                  <div class="modal-dialog">
-                                                    <!-- Modal content-->
-                                                    <div class="modal-content">
-                                                      <div class="modal-header">
-                                                        <h4 class="modal-title">Bank Voucher</h4>
-                                                      </div>
-                                                      <div class="modal-body">
-                                                        <form action="{{url('receive-voucher/666/general_journal_edit_bank_voucher')}}" method="POST">
-                                                            @csrf
-                                                            <input type="hidden" name="id" value="{{$row_rvl->id}}"/>
-                                                            <div class="form-group">
-                                                              <label for="exampleInputPassword1">Date: {{$newDate}}</label>
-                                                            <input type="date" class="form-control" value="{{$newDate}}" placeholder="{{$newDate}}" name="date" required>
-                                                          </div>
-                                                          <div class="form-group">
-                                                            <label for="exampleInputEmail1">Account Head : @php echo $Banks[0]->name; @endphp</label>
-                                                                    <select class="form-control" data-live-search="true" data-live-search-style="begins" title="Select customer..." name="customer_id">
-                                                                         <option value="{{$row_rvl->bank_id}}" selected="selected" >{{$Banks[0]->name}}</option>
-                                                                            @php 
-                                                                                $expenses_row = DB::table('accounts')->where('account_type', 'bank')->get(); 
-                                                                            @endphp
-                                                                            @if(!$expenses_row->isEmpty())
-                                                                                    echo $expenses[0]->name;
-                                                                                @endif
-                                                                        @foreach($expenses_row as $bank)
-                                                                            <option value="{{$bank->id}}">{{$bank->name}})</option>
-                                                                        @endforeach
-                                                                    </select>
-                                                          </div>
-                                                          <div class="form-group">
-                                                            <label for="exampleInputPassword1">Amount</label>
-                                                            <input type="text" class="form-control" name="amount" value="{{$row_rvl->amount}}">
-                                                          </div>
-                                                          <div class="form-group">
-                                                            <label for="exampleInputPassword1">Note</label>
-                                                            <input type="text" class="form-control" name="note" value="{{$row_rvl->note}}" >
-                                                          </div>
-                                                          <div class="form-group">
-                                                            <label for="exampleInputPassword1">Debit / Credit : {{$row_rvl->action}}</label>
-                                                                <select class="form-control" name="action">
-                                                                    @if($row_rvl->action == "debit")
-                                                                        <option value="debit"> Debit </option>
-                                                                    @else
-                                                                        <option value="credit"> Credit </option>
-                                                                    @endif
-                                                                    <option value="debit"> Debit </option>
-                                                                    <option value="credit"> Credit </option>
-                                                                </select>
-                                                          </div>
-                                                          
-                                                          <button type="submit" class="btn btn-primary">Submit</button>
-                                                        </form>
-                                                      </div>
-                                                      <div class="modal-footer">
-                                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                                      </div>
-                                                    </div>
-                                                
-                                                  </div>
-                                                </div>
-                                            <!-- Modal -->    
-                                            
-                                    @endforeach
+                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             </tfoot>
                         </table>
                 </div>
@@ -886,7 +522,9 @@ section p{font-family:'Lato', sans-serif;}
           
         </div>
       </div>
-    
+    </div>
+  </div>
+
 <!--home-content-top ends here--> 
 
 
@@ -930,7 +568,7 @@ $('#gatepass-details').on('show.bs.modal', function (event) {
   
   $("#gatepass-details input[name='sale_id']").val(sale[14]);
         var id = $(this).attr('data-id');
-        var htmltext = '<div class="row"><div class="col-md-6"><strong>Invoice Detail</strong> <br/><strong>{{trans("file.Date")}}: </strong>'+invoice_date+'<br><strong>{{trans("file.reference")}}: </strong>'+reference+'<br><strong>Bill Number: </strong>'+bill_no+'</div><div class="col-md-6"><strong>Customer Detail:</strong><br> <strong>Customer Name:</strong> '+customer_name+'<br>Contact Number: </strong> g> '+customer_phone+' <br> <strong> Address: </strong> Market اناج منڈی <strong> <br/> City: </strong> '+customer_city+' <br> </div></div>';
+        var htmltext = '<div class="row"><div class="col-md-6"><strong>Invoice Detail</strong> <br/><strong><?php echo e(trans("file.Date")); ?>: </strong>'+invoice_date+'<br><strong><?php echo e(trans("file.reference")); ?>: </strong>'+reference+'<br><strong>Bill Number: </strong>'+bill_no+'</div><div class="col-md-6"><strong>Customer Detail:</strong><br> <strong>Customer Name:</strong> '+customer_name+'<br>Contact Number: </strong> g> '+customer_phone+' <br> <strong> Address: </strong> Market اناج منڈی <strong> <br/> City: </strong> '+customer_city+' <br> </div></div>';
         $.get('sales/product_sale/' + myVal, function(data){
             $(".product-sale-list tbody").remove();
             var name_code = data[0];
@@ -1032,7 +670,7 @@ $('#gatepass-details').on('show.bs.modal', function (event) {
             /*
             var newRow = $("<tr>");
             cols = '';
-            cols += '<td colspan=6><strong>{{trans("file.Order Tax")}}:</strong></td>';
+            cols += '<td colspan=6><strong><?php echo e(trans("file.Order Tax")); ?>:</strong></td>';
             cols += '<td>' + sale[17] + '(' + sale[18] + '%)' + '</td>';
             newRow.append(cols);
             newBody.append(newRow);
@@ -1040,14 +678,14 @@ $('#gatepass-details').on('show.bs.modal', function (event) {
 
             var newRow = $("<tr>");
             cols = '';
-            cols += '<td colspan=6><strong>{{trans("file.Order Discount")}}:</strong></td>';
+            cols += '<td colspan=6><strong><?php echo e(trans("file.Order Discount")); ?>:</strong></td>';
             cols += '<td>' + sale[19] + '</td>';
             newRow.append(cols);
             newBody.append(newRow);
             if(sale[28]) {
                 var newRow = $("<tr>");
                 cols = '';
-                cols += '<td colspan=6><strong>{{trans("file.Coupon Discount")}} ['+sale[28]+']:</strong></td>';
+                cols += '<td colspan=6><strong><?php echo e(trans("file.Coupon Discount")); ?> ['+sale[28]+']:</strong></td>';
                 cols += '<td>' + sale[29] + '</td>';
                 newRow.append(cols);
                 newBody.append(newRow);
@@ -1055,35 +693,35 @@ $('#gatepass-details').on('show.bs.modal', function (event) {
 
             var newRow = $("<tr>");
             cols = '';
-            cols += '<td colspan=6><strong>{{trans("file.Shipping Cost")}}:</strong></td>';
+            cols += '<td colspan=6><strong><?php echo e(trans("file.Shipping Cost")); ?>:</strong></td>';
             cols += '<td>' + sale[20] + '</td>';
             newRow.append(cols);
             newBody.append(newRow);
 
             var newRow = $("<tr>");
             cols = '';
-            cols += '<td colspan=6><strong>{{trans("file.grand total")}}:</strong></td>';
+            cols += '<td colspan=6><strong><?php echo e(trans("file.grand total")); ?>:</strong></td>';
             cols += '<td>' + sale[21] + '</td>';
             newRow.append(cols);
             newBody.append(newRow);
 
             var newRow = $("<tr>");
             cols = '';
-            cols += '<td colspan=6><strong>{{trans("file.Paid Amount")}}:</strong></td>';
+            cols += '<td colspan=6><strong><?php echo e(trans("file.Paid Amount")); ?>:</strong></td>';
             cols += '<td>' + sale[22] + '</td>';
             newRow.append(cols);
             newBody.append(newRow);
 
             var newRow = $("<tr>");
             cols = '';
-            cols += '<td colspan=6><strong>{{trans("file.Due")}}:</strong></td>';
+            cols += '<td colspan=6><strong><?php echo e(trans("file.Due")); ?>:</strong></td>';
             cols += '<td>' + parseFloat(sale[21] - sale[22]).toFixed(2) + '</td>';
             newRow.append(cols);
             newBody.append(newRow);
         */
             $("table.product-sale-list").append(newBody);
         });
-        //var htmlfooter = '<hr/><center><table style="width:40%">@php $builty = DB::table('deliveries')->where('sale_id', '=', 116)->get(); @endphp @foreach($builty as $row)<tr><td><img style="width:100%;" src="{{ URL::to('public/documents/delivery/' . $row->file) }}"/></td></tr>@endforeach</table></center><p><strong>{{trans("file.Sale Note")}}:</strong> '+sale[23]+'</p><p><strong>{{trans("file.Staff Note")}}:</strong> '+sale[24]+'</p><strong>{{trans("file.Created By")}}:</strong><br>'+sale[25]+'<br>'+sale[26];
+        //var htmlfooter = '<hr/><center><table style="width:40%"><?php $builty = DB::table('deliveries')->where('sale_id', '=', 116)->get(); ?> <?php $__currentLoopData = $builty; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $row): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?><tr><td><img style="width:100%;" src="<?php echo e(URL::to('public/documents/delivery/' . $row->file)); ?>"/></td></tr><?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?></table></center><p><strong><?php echo e(trans("file.Sale Note")); ?>:</strong> '+sale[23]+'</p><p><strong><?php echo e(trans("file.Staff Note")); ?>:</strong> '+sale[24]+'</p><strong><?php echo e(trans("file.Created By")); ?>:</strong><br>'+sale[25]+'<br>'+sale[26];
         //$('#sale-footer').html(htmlfooter);
         $('#gatepass-content').html(htmltext);
         $('#sale_idd').val(myVal);
@@ -1110,7 +748,7 @@ $('#sale-details').on('show.bs.modal', function (event) {
   
   $("#sale-details input[name='sale_id']").val(sale[14]);
         var id = $(this).attr('data-id');
-        var htmltext = '<div class="row"><div class="col-md-6"><strong>Invoice Detail</strong> <br/><strong>{{trans("file.Date")}}: </strong>'+invoice_date+'<br><strong>{{trans("file.reference")}}: </strong>'+reference+'<br><strong>Bill Number: </strong>'+bill_no+'</div><div class="col-md-6"><strong>Customer Detail:</strong><br> <strong>Customer Name:</strong> '+customer_name+'<br> <strong>Contact Number: </strong> '+customer_phone+' <br> <strong> City: </strong> '+customer_city+' <br> </div></div>';
+        var htmltext = '<div class="row"><div class="col-md-6"><strong>Invoice Detail</strong> <br/><strong><?php echo e(trans("file.Date")); ?>: </strong>'+invoice_date+'<br><strong><?php echo e(trans("file.reference")); ?>: </strong>'+reference+'<br><strong>Bill Number: </strong>'+bill_no+'</div><div class="col-md-6"><strong>Customer Detail:</strong><br> <strong>Customer Name:</strong> '+customer_name+'<br> <strong>Contact Number: </strong> '+customer_phone+' <br> <strong> City: </strong> '+customer_city+' <br> </div></div>';
         $.get('sales/product_sale/' + myVal, function(data){
             $(".product-sale-list tbody").remove();
             var name_code = data[0];
@@ -1212,7 +850,7 @@ $('#sale-details').on('show.bs.modal', function (event) {
             /*
             var newRow = $("<tr>");
             cols = '';
-            cols += '<td colspan=6><strong>{{trans("file.Order Tax")}}:</strong></td>';
+            cols += '<td colspan=6><strong><?php echo e(trans("file.Order Tax")); ?>:</strong></td>';
             cols += '<td>' + sale[17] + '(' + sale[18] + '%)' + '</td>';
             newRow.append(cols);
             newBody.append(newRow);
@@ -1220,14 +858,14 @@ $('#sale-details').on('show.bs.modal', function (event) {
 
             var newRow = $("<tr>");
             cols = '';
-            cols += '<td colspan=6><strong>{{trans("file.Order Discount")}}:</strong></td>';
+            cols += '<td colspan=6><strong><?php echo e(trans("file.Order Discount")); ?>:</strong></td>';
             cols += '<td>' + sale[19] + '</td>';
             newRow.append(cols);
             newBody.append(newRow);
             if(sale[28]) {
                 var newRow = $("<tr>");
                 cols = '';
-                cols += '<td colspan=6><strong>{{trans("file.Coupon Discount")}} ['+sale[28]+']:</strong></td>';
+                cols += '<td colspan=6><strong><?php echo e(trans("file.Coupon Discount")); ?> ['+sale[28]+']:</strong></td>';
                 cols += '<td>' + sale[29] + '</td>';
                 newRow.append(cols);
                 newBody.append(newRow);
@@ -1235,35 +873,35 @@ $('#sale-details').on('show.bs.modal', function (event) {
 
             var newRow = $("<tr>");
             cols = '';
-            cols += '<td colspan=6><strong>{{trans("file.Shipping Cost")}}:</strong></td>';
+            cols += '<td colspan=6><strong><?php echo e(trans("file.Shipping Cost")); ?>:</strong></td>';
             cols += '<td>' + sale[20] + '</td>';
             newRow.append(cols);
             newBody.append(newRow);
 
             var newRow = $("<tr>");
             cols = '';
-            cols += '<td colspan=6><strong>{{trans("file.grand total")}}:</strong></td>';
+            cols += '<td colspan=6><strong><?php echo e(trans("file.grand total")); ?>:</strong></td>';
             cols += '<td>' + sale[21] + '</td>';
             newRow.append(cols);
             newBody.append(newRow);
 
             var newRow = $("<tr>");
             cols = '';
-            cols += '<td colspan=6><strong>{{trans("file.Paid Amount")}}:</strong></td>';
+            cols += '<td colspan=6><strong><?php echo e(trans("file.Paid Amount")); ?>:</strong></td>';
             cols += '<td>' + sale[22] + '</td>';
             newRow.append(cols);
             newBody.append(newRow);
 
             var newRow = $("<tr>");
             cols = '';
-            cols += '<td colspan=6><strong>{{trans("file.Due")}}:</strong></td>';
+            cols += '<td colspan=6><strong><?php echo e(trans("file.Due")); ?>:</strong></td>';
             cols += '<td>' + parseFloat(sale[21] - sale[22]).toFixed(2) + '</td>';
             newRow.append(cols);
             newBody.append(newRow);
         */
             $("table.product-sale-list").append(newBody);
         });
-        //var htmlfooter = '<hr/><center><table style="width:40%">@php $builty = DB::table('deliveries')->where('sale_id', '=', 116)->get(); @endphp @foreach($builty as $row)<tr><td><img style="width:100%;" src="{{ URL::to('public/documents/delivery/' . $row->file) }}"/></td></tr>@endforeach</table></center><p><strong>{{trans("file.Sale Note")}}:</strong> '+sale[23]+'</p><p><strong>{{trans("file.Staff Note")}}:</strong> '+sale[24]+'</p><strong>{{trans("file.Created By")}}:</strong><br>'+sale[25]+'<br>'+sale[26];
+        //var htmlfooter = '<hr/><center><table style="width:40%"><?php $builty = DB::table('deliveries')->where('sale_id', '=', 116)->get(); ?> <?php $__currentLoopData = $builty; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $row): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?><tr><td><img style="width:100%;" src="<?php echo e(URL::to('public/documents/delivery/' . $row->file)); ?>"/></td></tr><?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?></table></center><p><strong><?php echo e(trans("file.Sale Note")); ?>:</strong> '+sale[23]+'</p><p><strong><?php echo e(trans("file.Staff Note")); ?>:</strong> '+sale[24]+'</p><strong><?php echo e(trans("file.Created By")); ?>:</strong><br>'+sale[25]+'<br>'+sale[26];
         //$('#sale-footer').html(htmlfooter);
         $('#sale-content').html(htmltext);
         $('#sale-details').modal('show');
@@ -1325,7 +963,7 @@ $(document).ready(function() {
           var divToPrint=document.getElementById('sale-details');
           var newWin=window.open('','Print-Window');
           newWin.document.open();
-          newWin.document.write('<link rel="stylesheet" href="<?php echo asset('public/vendor/bootstrap/css/bootstrap.min.css') ?>" type="text/css"><style type="text/css">@media print {.modal-dialog { max-width: 1000px;} }</style><body onload="window.print()">'+divToPrint.innerHTML+'</body>');
+          newWin.document.write('<link rel="stylesheet" href="<?php echo asset('public/vendor/bootstrap/css/bootstrap.min.css') ?>" type="text/css"><style type="text/css">@media  print {.modal-dialog { max-width: 1000px;} }</style><body onload="window.print()">'+divToPrint.innerHTML+'</body>');
           newWin.document.close();
           setTimeout(function(){newWin.close();},10);
     });
@@ -1377,9 +1015,9 @@ $(document).ready(function() {
                 cols += '<td>' + paid_amount[index] + '</td>';
                 cols += '<td>' + paying_method[index] + '</td>';
                 if(paying_method[index] != 'Paypal')
-                    cols += '<td><div class="btn-group"><button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{trans("file.action")}}<span class="caret"></span><span class="sr-only">Toggle Dropdown</span></button><ul class="dropdown-menu edit-options dropdown-menu-right dropdown-default" user="menu"><li><button type="button" class="btn btn-link edit-btn" data-id="' + payment_id[index] +'" data-clicked=false data-toggle="modal" data-target="#edit-payment"><i class="fa fa-edit"></i> {{trans("file.edit")}}</button></li><li class="divider"></li>{{ Form::open(['route' => 'sale.delete-payment', 'method' => 'post'] ) }}<li><input type="hidden" name="id" value="' + payment_id[index] + '" /> <button type="submit" class="btn btn-link" onclick="return confirmPaymentDelete()"><i class="fa fa-trash"></i> {{trans("file.delete")}}</button></li>{{ Form::close() }}</ul></div></td>';
+                    cols += '<td><div class="btn-group"><button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><?php echo e(trans("file.action")); ?><span class="caret"></span><span class="sr-only">Toggle Dropdown</span></button><ul class="dropdown-menu edit-options dropdown-menu-right dropdown-default" user="menu"><li><button type="button" class="btn btn-link edit-btn" data-id="' + payment_id[index] +'" data-clicked=false data-toggle="modal" data-target="#edit-payment"><i class="fa fa-edit"></i> <?php echo e(trans("file.edit")); ?></button></li><li class="divider"></li><?php echo e(Form::open(['route' => 'sale.delete-payment', 'method' => 'post'] )); ?><li><input type="hidden" name="id" value="' + payment_id[index] + '" /> <button type="submit" class="btn btn-link" onclick="return confirmPaymentDelete()"><i class="fa fa-trash"></i> <?php echo e(trans("file.delete")); ?></button></li><?php echo e(Form::close()); ?></ul></div></td>';
                 else
-                    cols += '<td><div class="btn-group"><button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{trans("file.action")}}<span class="caret"></span><span class="sr-only">Toggle Dropdown</span></button><ul class="dropdown-menu edit-options dropdown-menu-right dropdown-default" user="menu">{{ Form::open(['route' => 'sale.delete-payment', 'method' => 'post'] ) }}<li><input type="hidden" name="id" value="' + payment_id[index] + '" /> <button type="submit" class="btn btn-link" onclick="return confirmPaymentDelete()"><i class="fa fa-trash"></i> {{trans("file.delete")}}</button></li>{{ Form::close() }}</ul></div></td>';
+                    cols += '<td><div class="btn-group"><button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><?php echo e(trans("file.action")); ?><span class="caret"></span><span class="sr-only">Toggle Dropdown</span></button><ul class="dropdown-menu edit-options dropdown-menu-right dropdown-default" user="menu"><?php echo e(Form::open(['route' => 'sale.delete-payment', 'method' => 'post'] )); ?><li><input type="hidden" name="id" value="' + payment_id[index] + '" /> <button type="submit" class="btn btn-link" onclick="return confirmPaymentDelete()"><i class="fa fa-trash"></i> <?php echo e(trans("file.delete")); ?></button></li><?php echo e(Form::close()); ?></ul></div></td>';
 
                 newRow.append(cols);
                 newBody.append(newRow);
@@ -1619,13 +1257,13 @@ $(document).ready(function() {
             {"data": "options"},
         ],
         'language': {
-            'searchPlaceholder': "{{trans('file.Type date or sale reference...')}}",
-            'lengthMenu': '_MENU_ {{trans("file.records per page")}}',
-             "info":      '{{trans("file.Showing")}} _START_ - _END_ (_TOTAL_)',
-            "search":  '{{trans("file.Search")}}',
+            'searchPlaceholder': "<?php echo e(trans('file.Type date or sale reference...')); ?>",
+            'lengthMenu': '_MENU_ <?php echo e(trans("file.records per page")); ?>',
+             "info":      '<?php echo e(trans("file.Showing")); ?> _START_ - _END_ (_TOTAL_)',
+            "search":  '<?php echo e(trans("file.Search")); ?>',
             'paginate': {
-                    'previous': '{{trans("file.Previous")}}',
-                    'next': '{{trans("file.Next")}}'
+                    'previous': '<?php echo e(trans("file.Previous")); ?>',
+                    'next': '<?php echo e(trans("file.Next")); ?>'
             }
         },
         order:[['1', 'desc']],
@@ -1647,7 +1285,7 @@ $(document).ready(function() {
         buttons: [
             {
                 extend: 'pdf',
-                text: '{{trans("file.PDF")}}',
+                text: '<?php echo e(trans("file.PDF")); ?>',
                 exportOptions: {
                     columns: ':visible:Not(.not-exported)',
                     rows: ':visible'
@@ -1661,7 +1299,7 @@ $(document).ready(function() {
             },
             {
                 extend: 'csv',
-                text: '{{trans("file.CSV")}}',
+                text: '<?php echo e(trans("file.CSV")); ?>',
                 exportOptions: {
                     columns: ':visible:Not(.not-exported)',
                     rows: ':visible'
@@ -1675,7 +1313,7 @@ $(document).ready(function() {
             },
             {
                 extend: 'print',
-                text: '{{trans("file.Print")}}',
+                text: '<?php echo e(trans("file.Print")); ?>',
                 exportOptions: {
                     columns: ':visible:Not(.not-exported)',
                     rows: ':visible'
@@ -1688,7 +1326,7 @@ $(document).ready(function() {
                 footer:true
             },
             {
-                text: '{{trans("file.delete")}}',
+                text: '<?php echo e(trans("file.delete")); ?>',
                 className: 'buttons-delete',
                 action: function ( e, dt, node, config ) {
                     if(user_verified == '1') {
@@ -1721,7 +1359,7 @@ $(document).ready(function() {
             },
             {
                 extend: 'colvis',
-                text: '{{trans("file.Column visibility")}}',
+                text: '<?php echo e(trans("file.Column visibility")); ?>',
                 columns: ':gt(0)'
             },
         ],
@@ -1785,14 +1423,11 @@ $(document).ready(function() {
     }
 
 
-function someFunction(id){
-    
-  alert(id);
-}
 </script>
-@endsection
+<?php $__env->stopSection(); ?>
 
-@section('scripts')
+<?php $__env->startSection('scripts'); ?>
            
 
-@endsection
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layout.main', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

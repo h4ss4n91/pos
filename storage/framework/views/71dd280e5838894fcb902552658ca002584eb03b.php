@@ -202,10 +202,10 @@
 
             <div class="col-md-12">
                 <div class="card">
-            <h1 style="background:cyan; padding:10px; text-align:center; color:#000;"> C U S T O M E R   &nbsp; &nbsp;  P A Y M E N T  &nbsp; &nbsp;  V O U C H E R   &nbsp; &nbsp;  (DEBIT) </h1>
+            <h1 style="background:orange; padding:10px; text-align:center; color:#fff;"> S U P P L I E R   &nbsp; &nbsp;  P A Y M E N T  &nbsp; &nbsp;  V O U C H E R   &nbsp; &nbsp;  (DEBIT) </h1>
             
                     <div style="padding:0px !important" class="card-body">
-                        <?php echo Form::open(['url' => 'sales/321/customerPaymentVoucher', 'method' => 'post', 'id'=> 'inputform', 'onsubmit'=>'return monitor()', 'files' => true, 'class' => 'payment-form']); ?>
+                        <?php echo Form::open(['url' => 'sales/321/payment_voucher', 'method' => 'post', 'id'=> 'inputform', 'onsubmit'=>'return monitor()', 'files' => true, 'class' => 'payment-form']); ?>
 
                         <div style="padding:50px; " class="row">
                             <div class="col-md-12">
@@ -225,9 +225,9 @@
                                                 <table class="order-list">
                                                     <thead>
                                                         <tr>
-                                                            <th style="width:100px !important;" >ID</th>
+                                                            <th style="width:100px;">ID</th>
                                                             <th>Party Name</th>
-                                                            <th style="width:200px;">City</th>
+                                                            <th  style="width:250px !important;" >City</th>
                                                             <th style="width:200px;">Previous Balance</th>
                                                             <th style="width:200px;">Amount</th>
                                                             <th style="width:500px;">Note </th>
@@ -245,6 +245,7 @@
                                                     </tbody>
                                                     <tfoot style="background:#000" class="tfoot active">
                                                         <tr>
+                                                            <th></th>
                                                             <th></th>
                                                             <th style="width:145px;"></th>
                                                             <th></th>
@@ -661,7 +662,7 @@ function addRow(counter){
     var cols = "";
     cols += '<td><input  style="width:100px !important;"  class="arrow-togglable form-control customer_idd" name="customer_idd[]" id="customer_idd-'+ counter +'"/></td>';
     cols += '<td><input  style="width:350px !important;"  class="arrow-togglable form-control product-id" name="customer_id[]" id="demo-'+ counter +'"/></td>';
-    cols += '<td><input oninput="myinput(this.id,this.name)" readonly class="arrow-togglable form-control lot' + counter + '" type="text" id="' + counter + '" name="lot[]"/></td>';
+    cols += '<td><input  style="width:250px !important;" oninput="myinput(this.id,this.name)" readonly class="arrow-togglable form-control lot' + counter + '" type="text" id="' + counter + '" name="lot[]"/></td>';
     cols += '<td><input oninput="myinput(this.id,this.name)" readonly class="arrow-togglable form-control packing' + counter + '" type="text" id="' + counter + '" name="packing[]"/></td>';
     cols += '<td><input  oninput="myinput(this.id,this.alt)" alt="qty" class="arrow-togglable form-control qty' + counter + '" type="number" id="'+ counter +'" name="qty[]"/></td>';
     
@@ -701,7 +702,7 @@ function addRow(counter){
                 header:{
                 'X-CSRF-TOKEN':$('meta[name="csrf-token"]').attr('content')
                 },
-                url:"http://localhost/cd/pos/customer/"+id+"/customer/balance",
+                url:"http://localhost/cd/pos/sales/"+id+"/supplier_city",
                 
             })
             .done(function(data) {
@@ -709,6 +710,7 @@ function addRow(counter){
                 $('#price'+counter).val(product.price);
                 $('#urdu_name'+counter).val(product.urdu_name);
                 $('.lot'+counter).val(product.city);
+                $('#customer_idd-'+counter).val(product.urdu_name);
                 $('.packing'+counter).val(product.balance);
                 $('.qty'+counter).val();
                 $('#discount'+counter).val();
@@ -789,15 +791,15 @@ $(document).ready(function(){
                 header:{
                 'X-CSRF-TOKEN':$('meta[name="csrf-token"]').attr('content')
                 },
-                url:"http://localhost/cd/pos/customer/"+id+"/customer/balance",
+                url:"http://localhost/cd/pos/sales/"+id+"/supplier_city",
             })
             .done(function(data) {
                 var product = jQuery.parseJSON(data);
                 $('#price1').val(product.price);
                 $('#urdu_name1').val(product.urdu_name);
                 $('.lot1').val(product.city);
+                $('#customer_idd-1').val(product.urdu_name);
                 $('.packing1').val(product.balance);
-                $('#customer_idd-1').val(product.id);
                 $('.qty1').val();
                 $('#discount1').val();
                 $('#sub_total1').val(product.price);

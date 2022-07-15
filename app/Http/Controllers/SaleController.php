@@ -30,6 +30,7 @@ use App\User;
 use App\Variant;
 use App\ProductVariant;
 use DB;
+use DateTime;
 use App\GeneralSetting;
 use Stripe\Stripe;
 use NumberToWords\NumberToWords;
@@ -2254,11 +2255,30 @@ class SaleController extends Controller
         public function customer($id, $customer, $balance){
 
             $customers = DB::table('customers')->where('id', '=', $id)->get();
-            $accounts_balance = DB::table('accounts')->where('account_no', '=', $id)->where('account_type', '=', 'customer')->get();
+            $account = DB::table('accounts')->where('account_type', '=', 'customer')->where('account_no', '=', $id)->get();
+            
+
+            $accounts_t_balance_debit = DB::table('payments')
+                ->where('account_id', '=', $account[0]->account_no)
+                ->where('sale_id', '!=', NULL)
+                ->where('type', '=', 'd')
+                ->sum('debit');
+                
+            $accounts_t_balance_credit = DB::table('payments')
+                ->where('account_id', '=', $account[0]->account_no)
+                ->where('sale_id', '!=', NULL)
+                ->where('type', '=', 'c')
+                ->sum('credit');
+                
+                $total = $accounts_t_balance_debit - $accounts_t_balance_credit ;
+                    
+
+
+            
                 $array = array(
-                    'id' => $accounts_balance[0]->account_no,
+                    'id' => $account[0]->account_no,
                     'name' => $customers[0]->name,
-                    'balance' => 0,
+                    'balance' => $total,
                     'city' => $customers[0]->city);
                     echo json_encode($array);
         }
@@ -2305,7 +2325,8 @@ class SaleController extends Controller
                             'change' => 0,
                             'bank_voucher_id' => $id,
                             'amount' => $data['qty'][$i],
-                            'years' => '2022',
+                            'year' => '2022',
+                            'user_id' => $user->id,
                             'bank_id' => $data['customer_id'][$i],
                             
                             'date' => date('Y-m-d', strtotime($receive_voucher_date)),
@@ -2370,7 +2391,8 @@ class SaleController extends Controller
                             'date' => date('Y-m-d', strtotime($receive_voucher_date)),
                             'date_2' => date('Y-m-d', strtotime($receive_voucher_date)),
                             'type' => "c",
-                            'years' => '2022',
+                            'year' => '2022',
+                            'user_id' => $user->id,
                             'paying_method' => 0,
                             'payment_note' => $data['note'][$i],
                             'created_at' => date('Y-m-d H:i:s')
@@ -2398,7 +2420,6 @@ class SaleController extends Controller
         
         for ($i = 0; $i < count($customer_id); $i++) {
             
-            
             if($data['qty'][$i] != NULL){
                 
                     $expense_voucher_id = DB::table('expense_vouchers')->insertGetId([
@@ -2424,7 +2445,8 @@ class SaleController extends Controller
                             'date_2' => date('Y-m-d', strtotime($receive_voucher_date)),
                             'type' => "d",
                             'paying_method' => 0,
-                            'years' => '2022',
+                            'year' => '2022',
+                            'user_id' => $user->id,
                             'payment_note' => $data['note'][$i],
                             'created_at' => date('Y-m-d H:i:s')
                         ]);
@@ -2471,12 +2493,13 @@ class SaleController extends Controller
                             'expense_id' => $customer_id[$i],
                             'expense_voucher_id' => $expense_voucher_id,
                             'change' => 0,
+                            'user_id' => $user->id,
                             'amount' => $data['qty'][$i],
                             'date' => date('Y-m-d', strtotime($receive_voucher_date)),
                             'date_2' => date('Y-m-d', strtotime($receive_voucher_date)),
                             'type' => "c",
                             'paying_method' => 0,
-                            'years' => '2022',
+                            'year' => '2022',
                             'payment_note' => $data['note'][$i],
                             'created_at' => date('Y-m-d H:i:s')
                         ]);
@@ -2524,7 +2547,7 @@ class SaleController extends Controller
                             'amount' => $data['qty'][$i],
                             'user_id' => $user->id,
                             'sale_id' => 'Remaining Amount',
-                            'years' => '2022',
+                            'year' => '2022',
                             'date' => date('Y-m-d', strtotime($receive_voucher_date)),
                             'date_2' => date('Y-m-d', strtotime($receive_voucher_date)),
                             'type' => "d",
@@ -2577,7 +2600,7 @@ class SaleController extends Controller
                             'date_2' => date('Y-m-d', strtotime($receive_voucher_date)),
                             'type' => "c",
                             'user_id' => $user->id,
-                            'years' => '2022',
+                            'year' => '2022',
                             'paying_method' => 0,
                             'payment_note' => $data['note'][$i],
                             'created_at' => date('Y-m-d H:i:s')
@@ -2621,13 +2644,14 @@ class SaleController extends Controller
                             'payment_reference' => $user->name. '-' . date("d-m-Y - H:i:a"),
                             'account_id' => $supplier_id[$i],
                             'change' => 0,
+                            'user_id' => $user->id,
                             'payment_voucher_id' => $payment_voucher_id,
                             'amount' => $data['qty'][$i],
                             'purchase_id' => 'Payments',
                             'date' => date('Y-m-d', strtotime($receive_voucher_date)),
                             'date_2' => date('Y-m-d', strtotime($receive_voucher_date)),
-                            'type' => "d",
-                            'years' => '2022',
+                            'type' => "c",
+                            'year' => '2022',
                             'paying_method' => 0,
                             'payment_note' => $data['note'][$i],
                             'created_at' => date('Y-m-d H:i:s')
@@ -2679,7 +2703,8 @@ class SaleController extends Controller
                             'date' => date('Y-m-d', strtotime($receive_voucher_date)),
                             'date_2' => date('Y-m-d', strtotime($receive_voucher_date)),
                             'type' => "d",
-                            'years' => '2022',
+                            'user_id' => $user->id,
+                            'year' => '2022',
                             'paying_method' => 0,
                             'payment_note' => $data['note'][$i],
                             'created_at' => date('Y-m-d H:i:s')
@@ -2697,7 +2722,7 @@ class SaleController extends Controller
     public function expense_balance($id){
         
         //$customers = DB::table('suppliers')->where('id', '=', $id)->get();
-    	$accounts_balance = DB::table('accounts')->where('id', '=', $id)->get();
+    	$accounts_balance = DB::table('accounts')->where('account_type', '=', 'expense')->where('id', '=', $id)->get();
 
         	$array = array(
                 'name' => $accounts_balance[0]->name,
@@ -2711,7 +2736,8 @@ class SaleController extends Controller
     public function bank_balance($id){
         
         //$customers = DB::table('suppliers')->where('id', '=', $id)->get();
-    	$accounts_balance = DB::table('accounts')->where('id', '=', $id)->get();
+    	// $accounts_balance = DB::table('accounts')->where('id', '=', $id)->get();
+        $accounts_balance = DB::table('accounts')->where('account_type', '=', 'bank')->where('id', '=', $id)->get();
 
         	$array = array(
                 'name' => $accounts_balance[0]->name,

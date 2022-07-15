@@ -202,61 +202,58 @@
 
             <div class="col-md-12">
                 <div class="card">
-            <h1 style="background:cyan; padding:10px; text-align:center; color:#000;"> C U S T O M E R   &nbsp; &nbsp;  P A Y M E N T  &nbsp; &nbsp;  V O U C H E R   &nbsp; &nbsp;  (DEBIT) </h1>
+            <h1 style="background:#E503D4; padding:10px; text-align:center; color:#fff;"> B A N K  &nbsp; &nbsp;  P A Y M  E N T &nbsp; &nbsp; V O U C H E R  (Debit) </h1>
             
                     <div style="padding:0px !important" class="card-body">
-                        <?php echo Form::open(['url' => 'sales/321/customerPaymentVoucher', 'method' => 'post', 'id'=> 'inputform', 'onsubmit'=>'return monitor()', 'files' => true, 'class' => 'payment-form']); ?>
+                        <?php echo Form::open(['url' => 'sales/321/bank_voucher_debit', 'method' => 'post', 'id'=> 'inputform', 'onsubmit'=>'return monitor()', 'files' => true, 'class' => 'payment-form']); ?>
 
                         <div style="padding:50px; " class="row">
                             <div class="col-md-12">
-                                
                                 <div style="width:97% !important;" class="row">
-                                    <div class="col-md-3">
+                                    <div class="col-md-2">
                                         <label style="color:#000;font-weight:bold;font-size:21px;">Date</label>
-                                          <input name="receive_voucher_date" type="date" class="arrow-togglable form-control date-input" value="<?php echo date('d-m-Y');?>"/>
+                                           <input name="payment_voucher_date" type="date" class="arrow-togglable form-control date-input" value="<?php echo date('d-m-Y');?>"/>
                                     </div>
                                 </div>
                             
                               <div style="width:99% !important; height:424px; overflow:auto;" class="row mt-12">
-                                  
                                     <div class="col-md-12">
                                         <div class="table-responsive">
                
-                                                <table class="order-list">
-                                                    <thead>
-                                                        <tr>
-                                                            <th style="width:100px !important;" >ID</th>
-                                                            <th>Party Name</th>
-                                                            <th style="width:200px;">City</th>
-                                                            <th style="width:200px;">Previous Balance</th>
-                                                            <th style="width:200px;">Amount</th>
-                                                            <th style="width:500px;">Note </th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <tr>
-                                                            <td><input style="width:100px !important;"  class="arrow-togglable form-control customer_idd" name="customer_idd[]" id="customer_idd-1"/></td>
-                                                            <td><input style="width:350px !important;"  class="arrow-togglable form-control product-id" name="customer_id[]" id="demo-1"/></td>
-                                                            <td><input oninput="myinput(this.id,this.name)" class="arrow-togglable form-control lot1" type="text" id="1" name="lot[]" readonly/></td>
-                                                            <td><input class='arrow-togglable form-control packing1' type='text'  name='packing' readonly value=""/></td>
-                                                            <td><input  oninput="myinput(this.id,this.alt)" onkeypress="nextinput(this.id,this.alt)" alt="qty" class="arrow-togglable form-control qty1" type="text" id="1" name="qty[]"/></td>
-                                                            <td><input  oninput="myinput(this.id,this.alt)" alt="add" class="arrow-togglable form-control add_w1" type="text" id="1" name="note[]" onkeydown="keyAddw(event)"/></td>
-                                                        </tr>
-                                                    </tbody>
-                                                    <tfoot style="background:#000" class="tfoot active">
-                                                        <tr>
-                                                            <th></th>
-                                                            <th style="width:145px;"></th>
-                                                            <th></th>
-                                                            <th style="text-align:left; color:#fff; font-weight:bold; font-size:21px;" id="total_qty"></th>
-                                                            <input id="total_qty_two" value="" name="total_qty_two" type="hidden"/>
-                                                            <th style="text-align:left; color:#fff; font-weight:bold; font-size:21px;"></th>
-                                                            <th style="text-align:left; color:#fff; font-weight:bold; font-size:21px;"></th>
-                                                            <th style="text-align:left; color:#fff; font-weight:bold; font-size:21px;"></th>
-                                                        </tr>
-                                                    </tfoot>
-                                                </table>
-            
+                                            <table class="order-list">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Bank Name</th>
+                                                        <th style="width:200px;" >Account No</th>
+                                                        <th style="width:200px;" >Previous Balance</th>
+                                                        <th style="width:200px;" >Amount</th>
+                                                        <th>Current Balance</th>
+                                                        <th style="width:500px;">Note </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td><input style="width:250px !important;"  class="arrow-togglable form-control product-id" name="customer_id[]" id="demo-1"/></td>
+                                                        <td><input oninput="myinput(this.id,this.name)" class="arrow-togglable form-control lot1" type="text" id="1" name="lot[]" readonly/></td>
+                                                        <td><input class='arrow-togglable form-control packing1' type='text'  name='packing' readonly value=""/></td>
+                                                        <td><input  oninput="myinput(this.id,this.alt)" onkeypress="nextinput(this.id,this.alt)" alt="qty" class="arrow-togglable form-control qty1" type="text" id="1" name="qty[]"/></td>
+                                                        <td><span class="t_weight1"> </span> </td>
+                                                        <td><input  oninput="myinput(this.id,this.alt)" alt="add" class="arrow-togglable form-control add_w1" type="text" id="1" name="note[]" onkeydown="keyAddw(event)"/></td>
+                                                    </tr>
+                                                </tbody>
+                                                <tfoot style="background:#000" class="tfoot active">
+                                                    <tr>
+                                                        <th></th>
+                                                        <th style="width:145px;"></th>
+                                                        <th></th>
+                                                        <th style="text-align:left; color:#fff; font-weight:bold; font-size:21px;" id="total_qty"></th>
+                                                        <input id="total_qty_two" value="" name="total_qty_two" type="hidden"/>
+                                                        <th style="text-align:left; color:#fff; font-weight:bold; font-size:21px;"></th>
+                                                        <th style="text-align:left; color:#fff; font-weight:bold; font-size:21px;"></th>
+                                                    </tr>
+                                                </tfoot>
+                                            </table>
+                                                    
                                         </div>
                                     </div>
                                 </div>
@@ -301,8 +298,72 @@
 <script src="<?php echo e(asset('public/src/jquery.inputpicker.js')); ?>"></script>
 <script type="text/javascript">
 
+        var url = 'http://localhost/cd/pos/api/products/get_new_products';
+
+            $.ajax( {
+                type:'GET',
+                header:{
+                'X-CSRF-TOKEN':$('meta[name="csrf-token"]').attr('content')
+                },
+                url:url,
+            })
+            .done(function(data) {
+                //var balance = jQuery.parseJSON(data);
+                //alert(balance);
+                var length = 'New Products ( '+data.length+' )';
+                $('#remaining_product').text(length);
+            })
+            .fail(function() {
+               // alert("error");
+            });
+
+
+
+        var elements = document.getElementsByClassName("arrow-togglable");
+        var currentIndex = 0;
+    
+        function download_product(){
+        var url = 'http://localhost/cd/pos/api/products/get_new_products';
+        $.ajax( {
+                type:'GET',
+                header:{
+                'X-CSRF-TOKEN':$('meta[name="csrf-token"]').attr('content')
+                },
+                url:url,
+            })
+            .done(function(data) {
+                //console.log(data);
+                            // ARRAYS
+                            $.each(data, function(index, value) {
+                            //console.log(value);
+                            // Will stop running after "three"
+                                $.ajax({
+                                    type:'GET',
+                                        header:{
+                                            'X-CSRF-TOKEN':$('meta[name="csrf-token"]').attr('content')
+                                            },
+                                    url:"http://localhost/cd/pos/products_upload/"+value.name+"/"+value.urdu_name+"/"+value.packing+"/"+value.lot+"/"+value.category_id,
+                                    success:function(response){
+                                        console.log(response);
+                                        //location.href = '../products';
+                                    },
+                                });
+                            });
+                //console.log(data);
+                //var balance = jQuery.parseJSON(data);
+                //alert(balance);
+                //var length = 'New Products ( '+data.length+' )';
+                //$('#remaining_product').text(length);
+            })
+            .fail(function() {
+               // alert("error");
+            });
+
+
+    }
+        
         $(function(){
-        $(".order-list tbody tr td ").on("click input keypress keydown","button,input,textarea,select",function(e){
+    $(".order-list tbody tr td ").on("click input keypress keydown","button,input,textarea,select",function(e){
 
            
         if(e.which==37){
@@ -346,7 +407,7 @@
 
     $("ul#voucher").siblings('a').attr('aria-expanded','true');
     $("ul#voucher").addClass("show");
-    $("ul#voucher #customer-voucher-menu").addClass("active");
+    $("ul#voucher #purchase-voucher-menu").addClass("active");
 
 $("#payment").hide();
 $(".card-element").hide();
@@ -568,7 +629,7 @@ function myinput(index,field){
 
     if(field=="qty")
     {
-        var sum = (packing-qty);
+        var sum = (qty+packing);
         $(".t_weight"+index).text(sum)
         $(".t_weight"+index).val(sum)
         $(".linetotal"+index).val(bag_rate*qty)
@@ -640,7 +701,7 @@ function keyAddw(e){
     if(e.which==13){
         counter++;
         addRow(counter)
-        $('#customer_idd-'+counter).focus();
+        $('#urdu_name'+counter).focus();
     }
 }
 
@@ -659,12 +720,11 @@ function addRow(counter){
 
     var newRow = $("<tr>");
     var cols = "";
-    cols += '<td><input  style="width:100px !important;"  class="arrow-togglable form-control customer_idd" name="customer_idd[]" id="customer_idd-'+ counter +'"/></td>';
-    cols += '<td><input  style="width:350px !important;"  class="arrow-togglable form-control product-id" name="customer_id[]" id="demo-'+ counter +'"/></td>';
+    cols += '<td><input  style="width:250px !important;"  class="arrow-togglable form-control product-id" name="customer_id[]" id="demo-'+ counter +'"/></td>';
     cols += '<td><input oninput="myinput(this.id,this.name)" readonly class="arrow-togglable form-control lot' + counter + '" type="text" id="' + counter + '" name="lot[]"/></td>';
     cols += '<td><input oninput="myinput(this.id,this.name)" readonly class="arrow-togglable form-control packing' + counter + '" type="text" id="' + counter + '" name="packing[]"/></td>';
     cols += '<td><input  oninput="myinput(this.id,this.alt)" alt="qty" class="arrow-togglable form-control qty' + counter + '" type="number" id="'+ counter +'" name="qty[]"/></td>';
-    
+    cols += '<td><span class="t_weight' + counter + '"> </span> </td>';
     cols += '<td><input  oninput="myinput(this.id,this.alt)" alt="add" class="arrow-togglable form-control add_w' + counter + '" onkeydown="keyAddw(event)" type="text" id="' + counter + '" name="note[]"/></td>';
     cols += '<td><a style="color:#fff; font-weight:bold;" class="btn btn-danger deleteRow form-control"> X </a></td>';
     newRow.append(cols);
@@ -674,7 +734,7 @@ function addRow(counter){
 
     $('#demo-'+counter).inputpicker({
        data:[ <?php $__currentLoopData = $lims_products_list; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $product): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                        {value:"<?php echo e($product->id); ?>",text:"<?php echo e($product->name); ?>",urdu:"<?php echo e($product->city); ?>"},
+                        {value:"<?php echo e($product->id); ?>",text:"<?php echo e($product->name); ?>",urdu:"<?php echo e($product->account_no); ?>"},
                      <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 ],
                 fields:[
@@ -701,8 +761,7 @@ function addRow(counter){
                 header:{
                 'X-CSRF-TOKEN':$('meta[name="csrf-token"]').attr('content')
                 },
-                url:"http://localhost/cd/pos/customer/"+id+"/customer/balance",
-                
+                url:"http://localhost/cd/pos/sales/"+id+"/bank_balance",
             })
             .done(function(data) {
                 var product = jQuery.parseJSON(data);
@@ -719,7 +778,7 @@ function addRow(counter){
                 sessionStorage.setItem("product_id", product.id);
             })
             .fail(function() {
-                alert("error");
+                alert("error hello");
             });
         }); 
     
@@ -730,6 +789,7 @@ function addRow(counter){
 
 
 function calculateGrandTotal() {
+
 
     var total_t_weight = 0;
     $("table.order-list").find('input[name^="t_weight"]').each(function () {
@@ -789,7 +849,7 @@ $(document).ready(function(){
                 header:{
                 'X-CSRF-TOKEN':$('meta[name="csrf-token"]').attr('content')
                 },
-                url:"http://localhost/cd/pos/customer/"+id+"/customer/balance",
+                url:"http://localhost/cd/pos/sales/"+id+"/bank_balance",
             })
             .done(function(data) {
                 var product = jQuery.parseJSON(data);
@@ -797,7 +857,6 @@ $(document).ready(function(){
                 $('#urdu_name1').val(product.urdu_name);
                 $('.lot1').val(product.city);
                 $('.packing1').val(product.balance);
-                $('#customer_idd-1').val(product.id);
                 $('.qty1').val();
                 $('#discount1').val();
                 $('#sub_total1').val(product.price);

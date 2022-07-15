@@ -224,18 +224,18 @@
                                                 <table class="order-list">
                                                     <thead>
                                                         <tr>
-                                                            <th style="width:100px;">ID</th>
-                                                            <th>Party Name</th>
-                                                            <th  style="width:250px !important;" >City</th>
-                                                            <th style="width:200px;">Previous Balance</th>
-                                                            <th style="width:200px;">Amount</th>
-                                                            <th style="width:500px;">Note </th>
+                                                            <th>ID</th>
+                                                            <th>Customer Name</th>
+                                                            <th>City</th>
+                                                            <th>Previous Balance</th>
+                                                            <th>Amount</th>
+                                                            <th>Note </th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
                                                         <tr>
-                                                            <td><input style="width:100px !important;"  class="arrow-togglable form-control customer_idd" name="customer_idd[]" id="customer_idd-1"/></td>
-                                                            <td><input style="width:350px !important;"  class="arrow-togglable form-control product-id" name="customer_id[]" id="demo-1"/></td>
+                                                            <td><input class="arrow-togglable form-control customer_idd" name="customer_idd[]" id="customer_idd-1"/></td>
+                                                            <td><input class="arrow-togglable form-control product-id" name="customer_id[]" id="demo-1"/></td>
                                                             <td><input oninput="myinput(this.id,this.name)" class="arrow-togglable form-control lot1" type="text" id="1" name="lot[]" readonly/></td>
                                                             <td><input class='arrow-togglable form-control packing1' type='text'  name='packing' readonly value=""/></td>
                                                             <td><input  autocomplete="off" oninput="myinput(this.id,this.alt)" onkeypress="nextinput(this.id,this.alt)" alt="qty" class="arrow-togglable form-control qty1" type="text" id="1" name="qty[]"/></td>
@@ -321,7 +321,7 @@
             }
 
         }   
-        console.log(fields)
+        //console.log(fields)
     
 
     })
@@ -688,6 +688,7 @@ function addRow(counter){
     
        $('#demo-'+counter).change(function(){
             $('.packing'+counter).focus();
+            
             var id = $(this).val();
             $.ajax( {
                 type:'GET',
@@ -698,14 +699,16 @@ function addRow(counter){
                 
             })
             .done(function(data) {
+
                 var product = jQuery.parseJSON(data);
+                
                 $('#price'+counter).val(product.price);
                 $('#urdu_name'+counter).val(product.urdu_name);
                 $('.lot'+counter).val(product.city);
-                $('#customer_idd-'+counter).val(product.urdu_name);
+                $('#customer_idd-'+counter).val(product.id);
                 $('.packing'+counter).val(product.balance);
                 $('.qty'+counter).val();
-                $('.customer_idd'+counter).val(product.id);
+                
                 
                 $('#discount'+counter).val();
                 $('#sub_total'+counter).val(product.price);
@@ -792,7 +795,7 @@ $(document).ready(function(){
                 $('#price1').val(product.price);
                 $('#urdu_name1').val(product.urdu_name);
                 $('.lot1').val(product.city);
-                $('#customer_idd-1').val(product.urdu_name);
+                $('#customer_idd-1').val(product.id);
                 $('.packing1').val(product.balance);
                 $('.customer_idd'+counter).val(product.id);
                 $('.qty1').val();
