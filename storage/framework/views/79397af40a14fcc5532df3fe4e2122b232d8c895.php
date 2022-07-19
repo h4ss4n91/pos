@@ -448,6 +448,164 @@
                   </div>
               </div>
             </div>
+			<div class="col-md-6">
+                      <div style="overflow-y: scroll;  height:600px;" class="card">
+                            <div class="card-header d-flex align-items-center">
+                              <h4>Product Ledger</h4>
+                            </div>
+                            <div class="card-body">
+                            						
+                              <table class="table" style="font-size:18px; width:100%">
+                              	<thead class="thead-dark">
+                                	<tr>
+                                      <th> Product ID </th>
+                                      <th> Product Name </th>
+                                      <th> Purchase </th>
+                                      <th> Sale </th>
+                                      <th> Stock </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                <?php
+                                	$products = DB::table('products')->get();
+                                ?>
+                                	<?php $__currentLoopData = $products; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $row_products): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                    
+                                    <tr>
+                                        <td> <?php echo e($row_products->id); ?> </td>
+                                        
+                                        <td>
+                                        <a style="font-weight:bold; text-decoration:underline" href="<?php echo e(url('home_product_ledger',$row_products->id)); ?>">
+                                        <?php echo e($row_products->name); ?>
+
+                                        </a>
+                                        
+                                        <!-- The Modal -->
+                                            <div class="modal" id="myProductModal<?php echo e($row_products->id); ?>">
+                                              <div class="modal-dialog modal-lg modal-dialog-centered">
+                                                <div class="modal-content">
+                                                
+                                                	
+
+                                                  <!-- Modal Header -->
+                                                  <div class="modal-header">
+                                                    <h4 class="modal-title"><?php echo e($row_products->name); ?></h4>
+                                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                                  </div>
+
+                                                  <!-- Modal body -->
+                                                  <div class="modal-body">
+                                                    <?php
+                                                        $product_sales = DB::table('product_sales')->where('product_id','=',$row_products->id)->get();
+                                                        //$product_purchase = DB::table('product_purchases')->where('product_id','=',$row_products->id)->get();
+                                                    ?>
+                                                    <table style="width:100% !important">
+                                                    	<tr>
+                                                            <td style="vertical-align: top; width:100% !important">
+                                                            		<h1>Product Ledger</h1>
+                                                                    
+    																<table id="table" class="table">
+                                                                      <thead class="thead-light">
+                                                                        <tr>
+                                                                          <th scope="col">Date</th>
+                                                                          <th scope="col">Purchase</th>
+                                                                          <th scope="col">Sale Detail</th>
+                                                                          <th scope="col">Sale</th>
+                                                                          <th scope="col">Stock</th>
+                                                                        </tr>
+                                                                      </thead>
+                                                                      <tbody>
+                                                                      <?php
+                                                                      	$product_ledger = DB::table('product_ledgers')->where('product_id','=',$row_products->id)->orderBy('id','ASC')->paginate(
+                                                                        $perPage = 15, $columns = ['*'], $pageName = 'product_ledger'
+                                                                        );
+                                                                      ?>
+                                                                      <?php $__currentLoopData = $product_ledger; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $row_product_sales): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                                      
+                                                                      <tr class="item <?php echo e($row_product_sales->id); ?>">
+                                                                          <td scope="col">
+                                                                           <?php
+                                                                          	echo date('d-m-Y', strtotime($row_product_sales->created_at))
+                                                                          ?>
+                                                                          </td>
+                                                                          
+                                                                          <td scope="col"><?php echo e($row_product_sales->purchase); ?></td>
+                                                                          <td scope="col"><span style="font-weight:bold; color:#000">
+                                                                          <?php if($row_product_sales->sale_id != NULL): ?>
+                                                                            Sale ID:</span> <?php echo e($row_product_sales->sale_id); ?> <br/>
+                                                                            <span style="font-weight:bold; color:#000"> Customer Name: 
+                                                                            	<?php
+                                                                                	$customer_name = DB::table('customers')->where('id','=',$row_product_sales->customer_id)->get();
+                                                                              	?>
+                                                                            
+                                                                            <?php if(!$customer_name->isEmpty()): ?>
+                                                                            	<?php echo e($customer_name[0]->name); ?> <br/>
+                                                                            <?php endif; ?>
+                                                                            </span> <br/>
+                                                                            <span style="font-weight:bold; color:#000"> <a target="_blank" href="<?php echo e(url('sales/'.$row_product_sales->bill_no.'/viewinvoice')); ?>"> Bill #:  <?php echo e($row_product_sales->bill_no); ?> </a> </span>
+                                                                          
+                                                                          <?php endif; ?>
+                                                                          
+                                                                          </td>
+                                                                          <td scope="col"><?php echo e($row_product_sales->sale); ?></td>
+                                                                          <td scope="col"><?php echo e($row_product_sales->stock); ?></td>
+                                                                        </tr>
+                                                                      <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+
+                                                                      </tbody>
+                                                                      <?php echo e($product_ledger->render()); ?>
+
+                                                                    </table>
+                                                                  
+                                                            </td>
+                                                        </tr>
+                                                        
+                                                    </table>
+                                                    
+                                                    
+                                                  </div>
+
+                                                  <!-- Modal footer -->
+                                                  <div class="modal-footer">
+                                                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                                                  </div>
+
+                                                </div>
+                                              </div>
+                                            </div>
+                                            
+                                         </td>
+                                         <td> 
+                                         		<?php
+                                                	$purchase = DB::table('product_purchases')->where('product_id', '=', $row_products->id)->sum('qty');
+                                                    echo $purchase;
+                                                ?>
+                                         </td>
+                                         <td> 
+                                         		<?php
+                                                	$sale = DB::table('product_sales')->where('product_id', '=', $row_products->id)->sum('qty');
+                                                    echo $sale;
+                                                ?>
+                                         </td>
+                                        <td> 
+                                        <?php
+                                            $stock = DB::table('product_warehouse')->where('product_id','=', $row_products->id)->where('warehouse_id','=', 1)->get();
+                                        ?>
+                                        <?php if(!$stock->isEmpty()): ?>
+                                        <?php echo e($stock[0]->qty); ?>
+
+                                        <?php endif; ?>
+                                        </td>
+                                    </tr>
+
+                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                
+                                </tbody>
+                               
+                              </table>
+                            </div>
+                      </div>
+                </div>
           </div>
         </div>
       </section>
