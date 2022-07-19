@@ -387,10 +387,10 @@ Route::post('accounts/{id}/supplier_ledger_update', 'AccountsController@supplier
 	Route::get('sales/{id}/expense_balance', 'SaleController@expense_balance');
 	Route::get('sales/{id}/bank_balance', 'SaleController@bank_balance');
 
-	
+	Route::get('home_customer_ledger/{id}', 'HomeController@home_customer_ledger');
 	
 	Route::get('accounts/getEXPRecords/{id}','AccountsController@getEXPRecords');
 	
-
+	Route::get('home_product_ledger/{id}', 'HomeController@home_product_ledger');
 });
 

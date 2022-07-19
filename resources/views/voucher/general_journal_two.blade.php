@@ -804,7 +804,6 @@ section p{font-family:'Lato', sans-serif;}
                                                     @php 
                                                         $Banks = DB::table('accounts')->where('id', $row_rvl->bank_id)->where('account_type', 'bank')->get(); 
                                                         echo $Banks[0]->name;
-                                                        
                                                     @endphp
                                                 </td>
                                                 <td>{{$row_rvl->amount}}</td>
