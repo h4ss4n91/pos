@@ -280,7 +280,8 @@ class SaleController extends Controller
     public function store(Request $request)
     {
         $data = $request->all();
-        //return dd($data);
+        // return dd($data['customer_id']);
+        // die();
 
         $data['user_id'] = Auth::id();
         if($data['pos']){
@@ -344,7 +345,7 @@ class SaleController extends Controller
             $lims_payment_data->payment_note = $data['payment_note'];
             
             $get_current_year = DB::table('years')->where('current_year','!=',"")->get();
-            $lims_payment_data->years = $get_current_year[0]->current_year;
+            $lims_payment_data->year = $get_current_year[0]->current_year;
             
             $lims_payment_data->type = "d";
             $lims_payment_data->debit = $data['grand_total'];
@@ -384,19 +385,19 @@ class SaleController extends Controller
                 $qty_list = explode(",", $lims_product_data->qty_list);
                 $price_list = explode(",", $lims_product_data->price_list);
 
-                foreach ($product_list as $key=>$child_id) {
-                    $child_data = Product::find($child_id);
-                    $child_warehouse_data = Product_Warehouse::where([
-                        ['product_id', $child_id],
-                        ['warehouse_id', $data['warehouse_id'] ],
-                        ])->first();
+                // foreach ($product_list as $key=>$child_id) {
+                //     $child_data = Product::find($child_id);
+                //     $child_warehouse_data = Product_Warehouse::where([
+                //         ['product_id', $child_id],
+                //         ['warehouse_id', $data['warehouse_id'] ],
+                //         ])->first();
 
-                    $child_data->qty -= $qty[$i] * $qty_list[$key];
-                    $child_warehouse_data->qty -= $qty[$i] * $qty_list[$key];
+                //     $child_data->qty -= $qty[$i] * $qty_list[$key];
+                //     $child_warehouse_data->qty -= $qty[$i] * $qty_list[$key];
 
-                    $child_data->save();
-                    $child_warehouse_data->save();
-                }
+                //     $child_data->save();
+                //     $child_warehouse_data->save();
+                // }
             }
 
             if($sale_unit[$i] != 'n/a') {
@@ -455,6 +456,65 @@ class SaleController extends Controller
             $product_sale['tax_rate'] = $tax_rate[$i];
             $product_sale['tax'] = $tax[$i];
             $product_sale['total'] = $mail_data['total'][$i] = $total[$i];
+             $product_warehouse = DB::table('product_warehouse')
+						->where('product_id', '=', $product_id[$i])
+                        ->where('warehouse_id', '=', $data['warehouse_id'])
+						->get();
+
+                  if($product_warehouse->isEmpty()){
+							$accounts = DB::table('product_warehouse')->insert([
+                              'product_id' => $product_id[$i],
+                              'warehouse_id' => $data['warehouse_id'],
+                              'qty' => $data['qty'][$i],
+                              'created_at' => date('Y-m-d H:i:'),
+                              'updated_at' => date('Y-m-d H:i:')
+                          ]);
+						$product_sale['stock'] = $data['qty'][$i];
+                  }else{
+
+                      $product_qty = DB::table('product_warehouse')
+                          ->where('product_id', '=', $product_id[$i])
+                          ->where('warehouse_id', '=', $data['warehouse_id'])
+                          ->update(['qty' => $product_warehouse[0]->qty - $data['qty'][$i]]);
+                  }
+                  
+                  $product_ledger = DB::table('product_ledgers')
+                      ->where('product_id', '=', $product_id[$i])
+                      ->where('warehouse_id', '=', $data['warehouse_id'])
+                      ->orderBy('id','DESC')
+                      ->get();
+
+                  if(count($product_ledger)>0){
+                  $accounts = DB::table('product_ledgers')->insert([
+                              'product_id' => $product_id[$i],
+                              'warehouse_id' => $data['warehouse_id'],
+                              'sale_id' => $lims_sale_data->reference_no,
+                              'bill_no' => $lims_sale_data->reference_no,
+                              'customer_id' => $data['customer_id'],
+                              'sale' => $data['qty'][$i],
+                              'stock' => $product_ledger[0]->stock - $data['qty'][$i],
+                              'created_at' => date('Y-m-d H:i:'),
+                              'updated_at' => date('Y-m-d H:i:')
+                          ]);
+						$product_sale['stock'] = $data['qty'][$i];
+                  }else{
+                  $accounts = DB::table('product_ledgers')->insert([
+                              'product_id' => $product_id[$i],
+                              'warehouse_id' => $data['warehouse_id'],
+                              'sale_id' => 'sale',
+                              'sale' => $data['qty'][$i],
+                              'customer_id' => $data['customer_id'],
+                              'stock' => $data['qty'][$i],
+                              'created_at' => date('Y-m-d H:i:'),
+                              'updated_at' => date('Y-m-d H:i:')
+                          ]);
+						$product_sale['stock'] = $data['qty'][$i];
+                  }
+                  
+                  
+
+                   // dd($product_sale);
+                    //die();
             Product_Sale::create($product_sale);
         }
         if($data['sale_status'] == 3)

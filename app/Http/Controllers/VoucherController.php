@@ -65,7 +65,7 @@ class VoucherController extends Controller
              );
              
               $account = DB::table('accounts')
-                            ->where('supplier_id', '=', $request->account_id)
+                            ->where('accountTypeID', '=', $request->account_id)
                             ->get();
 
              

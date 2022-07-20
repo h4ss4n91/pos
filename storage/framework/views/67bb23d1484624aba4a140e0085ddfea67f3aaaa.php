@@ -18,64 +18,7 @@
             
              <div class="container-fluid">
           <div class="row">
-                <div class="col-md-3">
-                      <div style="overflow-y: scroll;  height:600px;" class="card">
-                            <div style="background-color:purple;" class="card-header d-flex align-items-center">
-                              <h4 style="color:#fff;">Customer Ledger</h4>
-                            </div>
-                            <div class="card-body">
-                              <table class="table" style="font-size:18px; width:100%">
-                              	<thead class="thead-light">
-                                	<tr>
-                                      <th> Acc # </th>
-                                      <th> Customer </th>
-                                      <th> Balance </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                <?php
-                                	$customers = DB::table('customers')->get();
-                                ?>
-                                	<?php $__currentLoopData = $customers; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $row_customers): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                    <tr>
-                                        <td> <?php echo e($row_customers->id); ?> </td>
-                                        <td>
-                                        <a style="font-weight:bold; text-decoration:underline" href="<?php echo e(url('home_customer_ledger',$row_customers->id)); ?>">
-                                        <?php echo e($row_customers->name); ?>
-
-                                        </a>
-                                         </td>
-                                        <td> 
-                                            <?php
-                                            $account_id = DB::table('accounts')->where('accountTypeID','=',$row_customers->id)->value('id');
-                                                        $credit_customer = DB::table('payments')
-                                                            ->where('account_id', '=', $account_id)
-                                                            ->where('sale_id', '!=', NULL)
-                                                            ->where('type', '=', 'c')
-                                                            ->sum('credit');
-
-                                                        $debit_customer = DB::table('payments')
-                                                            ->where('account_id', '=', $account_id)
-                                                            ->where('sale_id', '!=', NULL)
-                                                            ->where('type', '=', 'd')
-                                                            ->sum('debit');
-                                            ?>
-                                            <?php echo e($debit_customer - $credit_customer); ?>
-
-                                    
-                                        </td>
-                                    </tr>
-
-                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                                
-                                </tbody>
-                                
-                              </table>
-                            </div>
-                      </div>
-                </div>
-                
-                <div class="col-md-3">
+                <div class="col-md-6">
                       <div style="overflow-y: scroll;  height:600px;" class="card">
                             <div style="background-color:green;" class="card-header d-flex align-items-center">
                               <h4 style="color:#fff;">Product Ledger</h4>

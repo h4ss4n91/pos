@@ -132,6 +132,7 @@
                             </div>
                       </div>
                 </div>
+                
                 <div class="col-md-6">
                        <!-- The Modal -->
                                             <div class="card">

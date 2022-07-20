@@ -381,41 +381,41 @@ class PurchaseController extends Controller
                 $quantity = $recieved[$i] / $lims_purchase_unit_data->operation_value;
             }
             $lims_product_data = Product::find($id);
-            if($lims_product_data->is_variant) {
-                $lims_product_variant_data = ProductVariant::select('id', 'variant_id', 'qty')->FindExactProductWithCode($lims_product_data->id, $product_code[$i])->first();
-                $lims_product_warehouse_data = Product_Warehouse::where([
-                    ['product_id', $id],
-                    ['variant_id', $lims_product_variant_data->variant_id],
-                    ['warehouse_id', $data['warehouse_id']]
-                ])->first();
-                $product_purchase['variant_id'] = $lims_product_variant_data->variant_id;
-                //add quantity to product variant table
-                $lims_product_variant_data->qty += $quantity;
-                $lims_product_variant_data->save();
-            }
-            else {
-                $lims_product_warehouse_data = Product_Warehouse::where([
-                    ['product_id', $id],
-                    ['warehouse_id', $data['warehouse_id'] ],
-                ])->first();
-            }
-            //add quantity to product table
-            $lims_product_data->qty = $lims_product_data->qty + $quantity;
-            $lims_product_data->save();
+            // if($lims_product_data->is_variant) {
+            //     $lims_product_variant_data = ProductVariant::select('id', 'variant_id', 'qty')->FindExactProductWithCode($lims_product_data->id, $product_code[$i])->first();
+            //     $lims_product_warehouse_data = Product_Warehouse::where([
+            //         ['product_id', $id],
+            //         ['variant_id', $lims_product_variant_data->variant_id],
+            //         ['warehouse_id', $data['warehouse_id']]
+            //     ])->first();
+            //     $product_purchase['variant_id'] = $lims_product_variant_data->variant_id;
+            //     //add quantity to product variant table
+            //     $lims_product_variant_data->qty += $quantity;
+            //     $lims_product_variant_data->save();
+            // }
+            // else {
+            //     $lims_product_warehouse_data = Product_Warehouse::where([
+            //         ['product_id', $id],
+            //         ['warehouse_id', $data['warehouse_id'] ],
+            //     ])->first();
+            // }
+            // //add quantity to product table
+            // $lims_product_data->qty = $lims_product_data->qty + $quantity;
+            // $lims_product_data->save();
             //add quantity to warehouse
-            if ($lims_product_warehouse_data) {
-                $lims_product_warehouse_data->qty = $lims_product_warehouse_data->qty + $quantity;
-            } 
-            else {
-                $lims_product_warehouse_data = new Product_Warehouse();
-                $lims_product_warehouse_data->product_id = $id;
-                $lims_product_warehouse_data->warehouse_id = $data['warehouse_id'];
-                $lims_product_warehouse_data->qty = $quantity;
-                if($lims_product_data->is_variant)
-                    $lims_product_warehouse_data->variant_id = $lims_product_variant_data->variant_id;
-            }
+            // if ($lims_product_warehouse_data) {
+            //     $lims_product_warehouse_data->qty = $lims_product_warehouse_data->qty + $quantity;
+            // } 
+            // else {
+            //     $lims_product_warehouse_data = new Product_Warehouse();
+            //     $lims_product_warehouse_data->product_id = $id;
+            //     $lims_product_warehouse_data->warehouse_id = $data['warehouse_id'];
+            //     $lims_product_warehouse_data->qty = $quantity;
+            //     if($lims_product_data->is_variant)
+            //         $lims_product_warehouse_data->variant_id = $lims_product_variant_data->variant_id;
+            // }
 
-            $lims_product_warehouse_data->save();
+            // $lims_product_warehouse_data->save();
 
             $product_purchase['purchase_id'] = $lims_purchase_data->id ;
             $product_purchase['product_id'] = $id;
@@ -427,6 +427,66 @@ class PurchaseController extends Controller
             $product_purchase['tax_rate'] = $tax_rate[$i];
             $product_purchase['tax'] = $tax[$i];
             $product_purchase['total'] = $total[$i];
+
+
+                $product_warehouse = DB::table('product_warehouse')
+						->where('product_id', '=', $product_id[$i])
+                        ->where('warehouse_id', '=', $data['warehouse_id'])
+						->get();
+
+                  if($product_warehouse->isEmpty()){
+							$accounts = DB::table('product_warehouse')->insert([
+                              'product_id' => $product_id[$i],
+                              'warehouse_id' => $data['warehouse_id'],
+                              'qty' => $data['qty'][$i],
+                              'created_at' => date('Y-m-d H:i:'),
+                              'updated_at' => date('Y-m-d H:i:')
+                          ]);
+						$product_purchase['stock'] = $data['qty'][$i];
+                  }else{
+
+                      $product_qty = DB::table('product_warehouse')
+                          ->where('product_id', '=', $product_id[$i])
+                          ->where('warehouse_id', '=', $data['warehouse_id'])
+                          ->update(['qty' => $product_warehouse[0]->qty + $data['qty'][$i]]);
+                  }
+                  
+                  $product_ledger = DB::table('product_ledgers')
+                      ->where('product_id', '=', $product_id[$i])
+                      ->where('warehouse_id', '=', $data['warehouse_id'])
+                      ->orderBy('id','DESC')
+                      ->get();
+
+                  if(count($product_ledger)>0){
+                  $accounts = DB::table('product_ledgers')->insert([
+                              'product_id' => $product_id[$i],
+                              'warehouse_id' => $data['warehouse_id'],
+                              'purchase_id' => $lims_purchase_data->reference_no,
+                              'bill_no' => $lims_purchase_data->reference_no,
+                              'supplier_id' => $data['supplier_id'],
+                              'purchase' => $data['qty'][$i],
+                              'stock' => $product_ledger[0]->stock + $data['qty'][$i],
+                              'created_at' => date('Y-m-d H:i:'),
+                              'updated_at' => date('Y-m-d H:i:')
+                          ]);
+						$product_purchase['stock'] = $data['qty'][$i];
+                  }else{
+                  $accounts = DB::table('product_ledgers')->insert([
+                              'product_id' => $product_id[$i],
+                              'warehouse_id' => $data['warehouse_id'],
+                              'purchase_id' => 'purchase',
+                              'purchase' => $data['qty'][$i],
+                              'supplier_id' => $data['supplier_id'],
+                              'stock' => $data['qty'][$i],
+                              'created_at' => date('Y-m-d H:i:'),
+                              'updated_at' => date('Y-m-d H:i:')
+                          ]);
+						$product_purchase['stock'] = $data['qty'][$i];
+                  }
+                  
+                  
+
+
             ProductPurchase::create($product_purchase);
         }
 
