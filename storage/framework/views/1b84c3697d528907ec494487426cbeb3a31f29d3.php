@@ -9,6 +9,11 @@
   font-size: 1.5em;
 }
 
+.tableRow, .tableCol{
+    bordeR:1px solid #000;
+    padding:10px; 
+}
+
     table tr td{
         font-size:23px !important;
         color:#000;
@@ -72,61 +77,24 @@
                                         </td>
                                     </tr>
                                 </table>
+                                
                                 <table>
                                     <tr>
-                                        <td> From Date: <input id="from_date" class="form-control" name="from_date" type="date"/> </td>
-                                        <td> To Date:  <input id="to_date" class="form-control" name="to_date" type="date"/> </td>
-                                        <td style="padding-left:50px;"> &nbsp; <br/> <button id="take_print" style="border-radius:8px; color:#fff;" class="btn btn-primary">Take a Print</button> </td>
+                                        <td>
+                                            <h1>Total Balance: <span id="total_balance"> </span></h1>
+                                        </td>
                                     </tr>
                                 </table>
-                                <div>
-                                    <table style="border:2px solid #000; width:100%;" border='1' id='userTable' style='border-collapse: collapse;'>
-                                       <thead>
-                                        <tr>
-                                          <td colspan="4">
-                                              <h1 style="text-align:center; font-weight:bold; color:green">Balance: <span style="font-weight:bold; font-size:31px;" id="customerBalance"> </span> <br/> <span style="color:blue"> (Last Receiving <span style="font-weight:bold; color:red" id="customer_last_date"> </span> days before)  </span></h1>
-                                          </td>
-                                          
-                                          <td colspan="4">
-                                                <h1 style="text-align:center; font-weight:bold; font-size:31px; color:green;" id="customerUrduName"> </h1>
-                                                <h1 style="text-align:center; font-weight:bold; font-size:25px; color:black;" id="phone_number"> </h1>
-                                          </td>
-                                        </tr>
-                                        
-                                        <tr>
-                                          <th style="font-size:21px;">S.No</th>
-                                          <th style="width:150px; font-size:21px;">Date</th>
-                                          <th style="width:70px; font-size:21px;">Age</th>
-                                          <th style="font-size:21px;">Description</th>
-                                          <th style="font-size:21px;">Debit</th>
-                                          <th style="font-size:21px;">Credit</th>
-                                          <th style="font-size:21px;">Balance</th>
-                                          <th style="font-size:21px;">Action</th>
-                                        </tr>
-                                       </thead>
-                                       <tbody></tbody>
-                                       <tfoot>
-                                        <tr>
-                                          <th style="font-size:21px;"></th>
-                                          <th style="width:150px; font-size:21px;"></th>
-                                          <th style="width:70px; font-size:21px;"></th>
-                                          <th style="font-size:21px;"></th>
-                                          <th style="color:red; font-size:21px;"><span id="total_debit"></span></th>
-                                          <th style="color:red; font-size:21px;"><span id="total_credit"></span></th>
-                                          <th style="color:red; font-size:21px;"><span id="total_balance"></span> </th>
-                                          <th style="font-size:21px;"></th>
-                                        </tr>
-                                       </tfoot>
-                                    </table>
+                                <div id="new_table">
+
                                 </div>
+                               
+                               
                         </td>
                         
                     </tr>
                 </table>
-                <hr/>
-                <div id="cehck_records">
-                    
-                </div>
+               
             </div>
         
       
@@ -280,6 +248,12 @@ $('select[name="account_id"]').on('change', function() {
          type: 'get',
          dataType: 'json',
          success: function(response){
+
+            $('#new_table').html(response.table);
+            $('#total_balance').html(response.total_balance);
+            
+
+
                 var total_debit = response['total_debit'];
                 $('#total_debit').html(total_debit);
                 var total_credit = response['total_credit'];

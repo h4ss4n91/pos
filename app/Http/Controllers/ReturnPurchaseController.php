@@ -8,6 +8,7 @@ use App\Warehouse;
 use App\Supplier;
 use App\Tax;
 use App\Product;
+use App\payment;
 use App\Product_Warehouse;
 use App\Unit;
 use App\PurchaseProductReturn;
@@ -185,6 +186,29 @@ class ReturnPurchaseController extends Controller
         }
 
         $lims_return_data = ReturnPurchase::create($data);
+
+        $paying_method = 'Debit';
+        $lims_payment_data = new Payment();
+        $lims_payment_data->user_id = Auth::id();
+        $lims_account_data = Account::where('is_default', true)->first();
+        $lims_payment_data->account_id = $data['supplier_id'];
+        $lims_payment_data->purchase_return_id = $lims_return_data->id;
+        $lims_payment_data->purchase_id = 'PR-'.$lims_return_data->id;
+        $data['payment_reference'] = 'pr-'.date("Ymd").'-'.date("his");
+        $lims_payment_data->payment_reference = $data['payment_reference'];
+        $lims_payment_data->amount = $data['grand_total'];
+        $lims_payment_data->change = 0;
+        $lims_payment_data->paying_method = $paying_method;
+        
+        
+        $get_current_year = DB::table('years')->where('current_year','!=',"")->get();
+        $lims_payment_data->year = $get_current_year[0]->current_year;
+        
+        $lims_payment_data->type = "c";
+        $lims_payment_data->credit = $data['grand_total'];
+        $lims_payment_data->save();
+
+
         if($data['supplier_id']){
             $lims_supplier_data = Supplier::find($data['supplier_id']);
         
@@ -209,6 +233,42 @@ class ReturnPurchaseController extends Controller
         $total = $data['subtotal'];
 
         foreach ($product_id as $key => $pro_id) {
+
+
+            $product_ledger = DB::table('product_ledgers')
+            ->where('product_id', '=', $pro_id)
+            ->where('warehouse_id', '=', $data['warehouse_id'])
+            ->orderBy('id','DESC')
+            ->get();
+    
+                if(count($product_ledger)>0){
+                $accounts = DB::table('product_ledgers')->insert([
+                            'product_id' => $pro_id,
+                            'warehouse_id' => $data['warehouse_id'],
+                            'purchase_return_id' => 'PR-'.$lims_return_data->id,
+                            'bill_no' => $lims_return_data->reference_no,
+                            'supplier_id' => $data['supplier_id'],
+                            'purchase_return_qty' => $data['qty'][$key],
+                            'stock' => $product_ledger[0]->stock - $data['qty'][$key],
+                            'created_at' => date('Y-m-d H:i:'),
+                            'updated_at' => date('Y-m-d H:i:')
+                        ]);
+                    $product_sale['stock'] = $data['qty'][$key];
+                }else{
+                $accounts = DB::table('product_ledgers')->insert([
+                            'product_id' => $pro_id,
+                            'warehouse_id' => $data['warehouse_id'],
+                            'purchase_return_id' => 'PR-'.$lims_return_data->id,
+                            'purchase_return_qty' => $data['qty'][$key],
+                            'supplier_id' => $data['supplier_id'],
+                            'stock' => $data['qty'][$key],
+                            'created_at' => date('Y-m-d H:i:'),
+                            'updated_at' => date('Y-m-d H:i:')
+                        ]);
+                    $product_sale['stock'] = $data['qty'][$key];
+                }
+
+
             $lims_product_data = Product::find($pro_id);
             $variant_id = null;
             if($purchase_unit[$key] != 'n/a') {

@@ -209,7 +209,7 @@ class ReturnController extends Controller
         $lims_account_data = Account::where('is_default', true)->first();
         $lims_payment_data->account_id = $data['customer_id'];
         $lims_payment_data->sale_return_id = $lims_return_data->id;
-        $lims_payment_data->sale_id = $lims_return_data->id;
+        $lims_payment_data->sale_id = 'SR-'.$lims_return_data->id;
         $data['payment_reference'] = 'spr-'.date("Ymd").'-'.date("his");
         $lims_payment_data->payment_reference = $data['payment_reference'];
         $lims_payment_data->amount = $data['grand_total'];
@@ -223,7 +223,6 @@ class ReturnController extends Controller
         $lims_payment_data->type = "c";
         $lims_payment_data->credit = $data['grand_total'];
         $lims_payment_data->save();
-
 
         $lims_customer_data = Customer::find($data['customer_id']);
         //collecting male data
@@ -246,6 +245,42 @@ class ReturnController extends Controller
         $total = $data['subtotal'];
 
         foreach ($product_id as $key => $pro_id) {
+
+
+            $product_ledger = DB::table('product_ledgers')
+            ->where('product_id', '=', $pro_id)
+            ->where('warehouse_id', '=', $data['warehouse_id'])
+            ->orderBy('id','DESC')
+            ->get();
+    
+                if(count($product_ledger)>0){
+                $accounts = DB::table('product_ledgers')->insert([
+                            'product_id' => $pro_id,
+                            'warehouse_id' => $data['warehouse_id'],
+                            'sale_return_id' => 'SR-'.$lims_return_data->id,
+                            'bill_no' => $lims_return_data->reference_no,
+                            'customer_id' => $data['customer_id'],
+                            'sale_return_qty' => $data['qty'][$key],
+                            'stock' => $product_ledger[0]->stock + $data['qty'][$key],
+                            'created_at' => date('Y-m-d H:i:'),
+                            'updated_at' => date('Y-m-d H:i:')
+                        ]);
+                    $product_sale['stock'] = $data['qty'][$key];
+                }else{
+                $accounts = DB::table('product_ledgers')->insert([
+                            'product_id' => $pro_id,
+                            'warehouse_id' => $data['warehouse_id'],
+                            'sale_return_id' => 'SR-'.$lims_return_data->id,
+                            'sale_return_qty' => $data['qty'][$key],
+                            'customer_id' => $data['customer_id'],
+                            'stock' => $data['qty'][$key],
+                            'created_at' => date('Y-m-d H:i:'),
+                            'updated_at' => date('Y-m-d H:i:')
+                        ]);
+                    $product_sale['stock'] = $data['qty'][$key];
+                }
+
+
             $lims_product_data = Product::find($pro_id);
             $variant_id = null;
             if($sale_unit[$key] != 'n/a'){

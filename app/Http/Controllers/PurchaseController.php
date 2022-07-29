@@ -429,28 +429,6 @@ class PurchaseController extends Controller
             $product_purchase['total'] = $total[$i];
 
 
-                $product_warehouse = DB::table('product_warehouse')
-						->where('product_id', '=', $product_id[$i])
-                        ->where('warehouse_id', '=', $data['warehouse_id'])
-						->get();
-
-                  if($product_warehouse->isEmpty()){
-							$accounts = DB::table('product_warehouse')->insert([
-                              'product_id' => $product_id[$i],
-                              'warehouse_id' => $data['warehouse_id'],
-                              'qty' => $data['qty'][$i],
-                              'created_at' => date('Y-m-d H:i:'),
-                              'updated_at' => date('Y-m-d H:i:')
-                          ]);
-						$product_purchase['stock'] = $data['qty'][$i];
-                  }else{
-
-                      $product_qty = DB::table('product_warehouse')
-                          ->where('product_id', '=', $product_id[$i])
-                          ->where('warehouse_id', '=', $data['warehouse_id'])
-                          ->update(['qty' => $product_warehouse[0]->qty + $data['qty'][$i]]);
-                  }
-                  
                   $product_ledger = DB::table('product_ledgers')
                       ->where('product_id', '=', $product_id[$i])
                       ->where('warehouse_id', '=', $data['warehouse_id'])
@@ -484,9 +462,6 @@ class PurchaseController extends Controller
 						$product_purchase['stock'] = $data['qty'][$i];
                   }
                   
-                  
-
-
             ProductPurchase::create($product_purchase);
         }
 

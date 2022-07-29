@@ -34,7 +34,6 @@ class AccountsController extends Controller
     {
         //
     }
-
     public function show($id)
     {
         //
@@ -250,11 +249,37 @@ class AccountsController extends Controller
          
          $userData['total_debit'] = $current_balance_debit;
          $userData['total_credit'] = $current_balance_credit;
+         $total_balance = $current_balance_debit - $current_balance_credit;
          
          // Fetch all records
          $userData['data'] = $debit_list_two;
          $userData['total_receiving'] = $total_receiving;
          
+        
+        $Array[] = '<table style="width:100%" class="table">';
+        $Array[] .= '<thead>';
+        $Array[] .= '<tr class="tableRow"><th class="tableCol">S#</th><th class="tableCol">Date</th><th class="tableCol">Age</th><th class="tableCol">Description</th><th class="tableCol">Debit</th><th class="tableCol">Credit</th><th class="tableCol">Balance</th></tr>';
+        $Array[] .= '</thead>';
+        $Array[] .= '<tbody>';
+        
+            
+            $total = 0;
+            $number = 1;
+          foreach($debit_list_two as $row){
+            $total_balance = $total += $row->debit - $row->credit;
+            if($row->sale_id > 0){$link = '<a target="_blank" href="../sales/'.$row->sale_id.'/edit">Sale Invoice: '.$row->sale_id.'</a>';}
+            if($row->sale_return_id > 0){$link = '<a target="_blank" href="../return-sale/'.$row->sale_return_id.'/edit">Sale Return Invoice: '.$row->sale_id.'</a>';}
+            if($row->sale_id == 'Receiving'){$link = '<a target="_blank" href="../customer-receiving-voucher-edit/'.$row->receive_voucher_id.'">Receiving: '.$row->receive_voucher_id.'</a>';}
+             $Array[] .= '<tr class="tableRow"><td class="tableCol">'.$number++.'</td><td class="tableCol">'.$row->formatted_date.'</td><td class="tableCol">'.$row->expires_in.'</td><td class="tableCol">'.$link.'</td><td class="tableCol">'.$row->debit.'</td><td class="tableCol">'.$row->credit.'</td><td class="tableCol">'.$total_balance.'</td></tr>';
+          }
+
+        $Array[] .= '</tbody><tfoot><tr class="tableRow"><td class="tableCol">&nbsp;</td><td class="tableCol">&nbsp;</td><td class="tableCol">&nbsp;</td><td class="tableCol">&nbsp;</td><td class="tableCol"><strong>'.$current_balance_debit.'</strong></td><td class="tableCol"><strong>'.$current_balance_credit.'</strong></td><td class="tableCol"><strong>'.$total_balance.'</strong></td></tr></tfoot></table>';
+        $final_Result = $Array;
+         
+ 
+         return response()->json(["table" => $final_Result, "total_balance" => $total_balance]);
+
+         die();
          echo json_encode($userData);
          exit;
          
@@ -263,6 +288,11 @@ class AccountsController extends Controller
     
          echo json_encode($userData);
          exit;
+
+         
+         
+
+         
          
 }
 
@@ -333,7 +363,36 @@ class AccountsController extends Controller
          // Fetch all records
          $userData['data'] = $debit_list_two;
          $userData['total_receiving'] = $total_receiving;
+
          
+        
+        $Array[] = '<table style="width:100%" class="table">';
+        $Array[] .= '<thead>';
+        $Array[] .= '<tr class="tableRow"><th class="tableCol">S#</th><th class="tableCol">Date</th><th class="tableCol">Age</th><th class="tableCol">Description</th><th class="tableCol">Debit</th><th class="tableCol">Credit</th><th class="tableCol">Balance</th></tr>';
+        $Array[] .= '</thead>';
+        $Array[] .= '<tbody>';
+        
+            
+            $total = 0;
+            $number = 1;
+            foreach($debit_list_two as $row){
+                $total_balance = $total += $row->debit - $row->credit;
+                if($row->purchase_id > 0){$link = '<a target="_blank" href="../purchases/'.$row->purchase_id.'/edit">Purchase Invoice: '.$row->purchase_id.'</a>';}
+                if($row->purchase_return_id > 0){$link = '<a target="_blank" href="../return-purchase/'.$row->purchase_return_id.'/edit">Purchase Return Invoice: '.$row->purchase_id.'</a>';}
+                $Array[] .= '<tr class="tableRow"><td class="tableCol">'.$number++.'</td><td class="tableCol">'.$row->formatted_date.'</td><td class="tableCol">'.$row->expires_in.'</td><td class="tableCol">'.$link.'</td><td class="tableCol">'.$row->debit.'</td><td class="tableCol">'.$row->credit.'</td><td class="tableCol">'.$total_balance.'</td></tr>';
+            }
+
+        $Array[] .= '</tbody><tfoot><tr class="tableRow"><td class="tableCol">&nbsp;</td><td class="tableCol">&nbsp;</td><td class="tableCol">&nbsp;</td><td class="tableCol">&nbsp;</td><td class="tableCol"><strong>'.$current_balance_debit.'</strong></td><td class="tableCol"><strong>'.$current_balance_credit.'</strong></td><td class="tableCol"><strong>'.$total_balance.'</strong></td></tr></tfoot></table>';
+        $final_Result = $Array;
+         
+ 
+         return response()->json(["supplier_table" => $final_Result]);
+
+         die();
+         
+
+         
+
          echo json_encode($userData);
 
 

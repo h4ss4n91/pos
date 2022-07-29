@@ -1,12 +1,15 @@
 @extends('layout.main') @section('content')
 
-
-
-
- <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.0.0-rc.5/dist/html2canvas.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.0.0-rc.5/dist/html2canvas.min.js"></script>
   
 <style>
 @import url(https://fonts.googleapis.com/earlyaccess/notonaskharabic.css);
+
+.tableRow, .tableCol{
+    bordeR:1px solid #000;
+    padding:10px; 
+}
+
 
 #customerUrduName{
   font-family: 'Noto Naskh Arabic', serif;
@@ -78,39 +81,16 @@
                                         </td>
                                     </tr>
                                 </table>
+
                                 <table>
                                     <tr>
-                                        <td> From Date: <input id="from_date_latest" class="form-control" name="from_date_latest" type="date"/> </td>
-                                        <td> To Date:  <input id="to_date_latest" class="form-control" name="to_date_latest" type="date"/> </td>
-                                        <td style="padding-left:50px;"> &nbsp; <br/> <button style="border-radius:8px; color:#fff;" id="take_print_latest" class="btn btn-primary">Take a Print</button> </td>
+                                        <td>
+                                            <h5>Total Balance: <span id="supplier_total_balance"> </span></h5>
+                                        </td>
                                     </tr>
                                 </table>
-                                <div id="printTable_latest" >
-                                    <table style="margin:0px auto; border:2px solid #000; width:100%;" border='1' id='userTable_latest' style='border-collapse: collapse;'>
-                                       <thead>
-                                        <tr>
-                                          <td colspan="4">
-                                              <h1 style="text-align:center; font-weight:bold; color:green">Balance: <span style="font-weight:bold; font-size:31px;" id="customerBalance"> </span> <br/> <span style="color:blue"> (Last Payments <span style="font-weight:bold; color:red" id="customer_last_date"> </span> days before)  </span></h1>
-                                          </td>
-                                          
-                                          <td colspan="3">
-                                                <h1 style="text-align:center; font-weight:bold; font-size:31px; color:green;" id="customerUrduName"> </h1>
-                                          </td>
-                                        </tr>
-                                        
-                                        <tr>
-                                          <th style="font-size:21px;">S.No</th>
-                                          <th style="width:150px; font-size:21px;">Date</th>
-                                          <th style="width:70px; font-size:21px;">Age</th>
-                                          <th style="font-size:21px;">Description</th>
-                                          <th style="font-size:21px;">Debit</th>
-                                          <th style="font-size:21px;">Credit</th>
-                                          <th style="font-size:21px;">Balance</th>
-                                          <th style="font-size:21px;">Action</th>
-                                        </tr>
-                                       </thead>
-                                       <tbody></tbody>
-                                    </table>
+                                <div id="supplier_new_table">
+
                                 </div>
                         </td>
                         
@@ -125,7 +105,7 @@
         </div>
     </div>
     
-    <div id="output"></div>
+    
         </div>
     
     </div>
@@ -223,6 +203,9 @@ $('select[name="account_id"]').on('change', function() {
          type: 'get',
          dataType: 'json',
          success: function(response){
+                console.log(response);
+            $('#supplier_new_table').html(response.supplier_table);
+            $('#supplier_total_balance').html(response.supplier_total_balance);
 
            var len = 0;
            $('#userTable tbody').empty(); // Empty <tbody>
@@ -906,6 +889,9 @@ $('select[name="account_id_latest"]').on('change', function() {
          type: 'get',
          dataType: 'json',
          success: function(response){
+
+            $('#supplier_new_table').html(response.supplier_table);
+            $('#supplier_total_balance').html(response.total_balance);
 
            var len = 0;
            $('#userTable_latest tbody').empty(); // Empty <tbody>

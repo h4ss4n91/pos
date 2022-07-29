@@ -456,7 +456,7 @@ class SaleController extends Controller
             $product_sale['tax_rate'] = $tax_rate[$i];
             $product_sale['tax'] = $tax[$i];
             $product_sale['total'] = $mail_data['total'][$i] = $total[$i];
-             $product_warehouse = DB::table('product_warehouse')
+            $product_warehouse = DB::table('product_warehouse')
 						->where('product_id', '=', $product_id[$i])
                         ->where('warehouse_id', '=', $data['warehouse_id'])
 						->get();
@@ -2247,11 +2247,28 @@ class SaleController extends Controller
                 $second_date = new DateTime(date('d-m-Y'));
                 $interval = $first_date->diff($second_date);
                 $last = $interval->format('%a');
-                return $array = array($total, $customer_name[0]->company_name, $last, $accounts_t_balance_credit, $customer_name[0]->phone_number);
+
+            $Array = [];
+            
+    
+            // foreach($sub_category as $row){
+                $Array[] = '<table><thead><tr><th>Heading1</th><th>Heading1</th><th>Heading1</th><th>Heading1</th></tr></thead>
+                            <tbody><td>Column1</td><td>Column1</td><td>Column1</td><td>Column1</td></tbody>
+                            </table>';
+            // }
+    
+            $final_Result = $Array;
+            return response()->json(["table" => $final_Result]);
+
+
+                // return $array = array($total, $customer_name[0]->company_name, $last, $accounts_t_balance_credit, $customer_name[0]->phone_number);
             }else{
                 $last = 0;
             return $array = array($total, $customer_name[0]->company_name, $last, $accounts_t_balance_credit, $customer_name[0]->phone_number);    
             }
+
+
+            
     }
 
 

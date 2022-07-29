@@ -449,20 +449,22 @@
                   </div>
               </div>
             </div>
-			<div class="col-md-6">
+
+            <div class="col-md-12">
                       <div style="overflow-y: scroll;  height:600px;" class="card">
-                            <div class="card-header d-flex align-items-center">
-                              <h4>Product Ledger</h4>
+                            <div style="background-color:green;" class="card-header d-flex align-items-center">
+                              <h4 style="color:#fff;">Product Ledger Testing</h4>
                             </div>
                             <div class="card-body">
                             						
                               <table class="table" style="font-size:18px; width:100%">
-                              	<thead class="thead-dark">
-                                	<tr>
-                                      <th> Product ID </th>
-                                      <th> Product Name </th>
-                                      <th> Purchase </th>
-                                      <th> Sale </th>
+                              	<thead class="thead-light">
+                                	  <tr>
+                                      <th> Product </th>
+                                      <th> Purchase Detail </th>
+                                      <th> Sale Detail </th>
+                                      <th> Purchase Return Detail </th>
+                                      <th> Sale Return Detail </th>
                                       <th> Stock </th>
                                     </tr>
                                 </thead>
@@ -473,105 +475,10 @@
                                 	@foreach($products as $row_products)
                                     
                                     <tr>
-                                        <td> {{$row_products->id}} </td>
-                                        
                                         <td>
                                         <a style="font-weight:bold; text-decoration:underline" href="{{url('home_product_ledger',$row_products->id)}}">
                                         {{$row_products->name}}
                                         </a>
-                                        
-                                        <!-- The Modal -->
-                                            <div class="modal" id="myProductModal{{$row_products->id}}">
-                                              <div class="modal-dialog modal-lg modal-dialog-centered">
-                                                <div class="modal-content">
-                                                
-                                                	
-
-                                                  <!-- Modal Header -->
-                                                  <div class="modal-header">
-                                                    <h4 class="modal-title">{{$row_products->name}}</h4>
-                                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                                  </div>
-
-                                                  <!-- Modal body -->
-                                                  <div class="modal-body">
-                                                    @php
-                                                        $product_sales = DB::table('product_sales')->where('product_id','=',$row_products->id)->get();
-                                                        //$product_purchase = DB::table('product_purchases')->where('product_id','=',$row_products->id)->get();
-                                                    @endphp
-                                                    <table style="width:100% !important">
-                                                    	<tr>
-                                                            <td style="vertical-align: top; width:100% !important">
-                                                            		<h1>Product Ledger</h1>
-                                                                    
-    																<table id="table" class="table">
-                                                                      <thead class="thead-light">
-                                                                        <tr>
-                                                                          <th scope="col">Date</th>
-                                                                          <th scope="col">Purchase</th>
-                                                                          <th scope="col">Sale Detail</th>
-                                                                          <th scope="col">Sale</th>
-                                                                          <th scope="col">Stock</th>
-                                                                        </tr>
-                                                                      </thead>
-                                                                      <tbody>
-                                                                      @php
-                                                                      	$product_ledger = DB::table('product_ledgers')->where('product_id','=',$row_products->id)->orderBy('id','ASC')->paginate(
-                                                                        $perPage = 15, $columns = ['*'], $pageName = 'product_ledger'
-                                                                        );
-                                                                      @endphp
-                                                                      @foreach($product_ledger as $row_product_sales)
-                                                                      
-                                                                      <tr class="item {{$row_product_sales->id}}">
-                                                                          <td scope="col">
-                                                                           @php
-                                                                          	echo date('d-m-Y', strtotime($row_product_sales->created_at))
-                                                                          @endphp
-                                                                          </td>
-                                                                          
-                                                                          <td scope="col">{{$row_product_sales->purchase}}</td>
-                                                                          <td scope="col"><span style="font-weight:bold; color:#000">
-                                                                          @if($row_product_sales->sale_id != NULL)
-                                                                            Sale ID:</span> {{$row_product_sales->sale_id}} <br/>
-                                                                            <span style="font-weight:bold; color:#000"> Customer Name: 
-                                                                            	@php
-                                                                                	$customer_name = DB::table('customers')->where('id','=',$row_product_sales->customer_id)->get();
-                                                                              	@endphp
-                                                                            
-                                                                            @if(!$customer_name->isEmpty())
-                                                                            	{{$customer_name[0]->name}} <br/>
-                                                                            @endif
-                                                                            </span> <br/>
-                                                                            <span style="font-weight:bold; color:#000"> <a target="_blank" href="{{ url('sales/'.$row_product_sales->bill_no.'/viewinvoice')}}"> Bill #:  {{$row_product_sales->bill_no}} </a> </span>
-                                                                          
-                                                                          @endif
-                                                                          
-                                                                          </td>
-                                                                          <td scope="col">{{$row_product_sales->sale}}</td>
-                                                                          <td scope="col">{{$row_product_sales->stock}}</td>
-                                                                        </tr>
-                                                                      @endforeach
-
-                                                                      </tbody>
-                                                                      {{$product_ledger->render()}}
-                                                                    </table>
-                                                                  
-                                                            </td>
-                                                        </tr>
-                                                        
-                                                    </table>
-                                                    
-                                                    
-                                                  </div>
-
-                                                  <!-- Modal footer -->
-                                                  <div class="modal-footer">
-                                                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                                                  </div>
-
-                                                </div>
-                                              </div>
-                                            </div>
                                             
                                          </td>
                                          <td> 
@@ -586,13 +493,24 @@
                                                     echo $sale;
                                                 @endphp
                                          </td>
+                                         <td>
+                                                @php
+                                                	$purchase_return = DB::table('purchase_product_return')->where('product_id', '=', $row_products->id)->sum('qty');
+                                                    echo $purchase_return;
+                                                @endphp
+                                         </td>
+                                         <td>
+                                                @php
+                                                	$sale_return = DB::table('product_returns')->where('product_id', '=', $row_products->id)->sum('qty');
+                                                    echo $sale_return;
+                                                @endphp
+                                         </td>
                                         <td> 
                                         @php
                                             $stock = DB::table('product_warehouse')->where('product_id','=', $row_products->id)->where('warehouse_id','=', 1)->get();
+                                            echo $stock = $purchase - $sale;
                                         @endphp
-                                        @if(!$stock->isEmpty())
-                                        {{$stock[0]->qty}}
-                                        @endif
+                                        
                                         </td>
                                     </tr>
 
